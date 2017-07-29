@@ -4,7 +4,7 @@ body {
 }
 
 #status-bar {
-  border-image: "assets/art/standardBG.png" 15 fill;
+  border-image: url("../art/standardBG.png") 15 fill;
   border-image-width: 20px;
   position: absolute;
   top: 0;
@@ -29,7 +29,7 @@ body {
 }
 
 button {
-  border-image: "assets/art/standardBG.png" 15 fill;
+  border-image: url("../art/standardBG.png") 15 fill;
   border-image-width: 10px;
   color: white;
 }
@@ -43,7 +43,7 @@ button {
 }
 
 #background {
-  background: "assets/art/prairieBG.png" no-repeat;
+  background: url("../art/prairieBG.png") no-repeat;
   background-size: 100% 100%;
   position: absolute;
   top: 0;
