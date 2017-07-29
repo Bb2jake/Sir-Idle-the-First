@@ -1,10 +1,35 @@
 @import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
 
-// body 
-//     width: 100vw;
-//     height: 100vh;
 body
     overflow: hidden;
+
+#status-bar
+    border-image: url("/assets/art/standardBG.png") 15 fill;
+    border-image-width: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 80%;
+    z-index: 1;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+
+#status-bar *
+    z-index: 2;
+    color: white;
+
+#hard-reset-btn
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 1%;
+
+button
+    border-image: url("/assets/art/standardBG.png") 15 fill;
+    border-image-width: 10px;
+    color: white;
+
 .wrapper
     width: 100%;
     padding-bottom: 75%;

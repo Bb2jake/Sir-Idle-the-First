@@ -12,13 +12,20 @@
 <body>
     <div class="wrapper">
         <div id="background">
+            <div class="container" id="status-bar-container">
+                <div id="status-bar" class="row vertical-align">
+                    <div id="hero-status-bar" class="text-center col-xs-5"></div>
+                    <div id="hard-reset-btn" class="text-center col-xs-2">
+                        <button type="button" onclick="hardReset()">Reset Game</button>
+                    </div>
+                    <div id="enemy-status-bar" class="text-center col-xs-5"></div>
+                </div>
+            </div>
             <div id="combatants">
 
             </div>
         </div>
     </div>
-
-
 
     <!-- Bootstrap JS script in case needed -->
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
