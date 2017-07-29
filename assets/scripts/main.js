@@ -23,22 +23,16 @@ function Combatant(name, stats, attacks, image) {
 
 function Hero(name, stats, attacks, image, potions) {
     Combatant.call(this, name, stats, attacks, image);
-    // this.atkPotion = getPotion("atk");
-    // this.spdPotion = getPotion("spd");
-    // this.hpPotion = getPotion("cu")
     this.potions = potions;
 
-    // function getPotion(name) {
-
-    // }
-
     this.getAtk = function () {
-        return potions['atkPotion'].isActive ? stats.atk * potions['atkPotion'].boostPercent : stats.atk;
+        let potion = potions['atkPotion'];
+        return potion.isActive ? stats.atk + stats.atk * potion.boostPercent / 100 : stats.atk;
     }
 
     this.getSpd = function () {
-        return potions['spdPotion'].isActive ? stats.spd * potions['spdPotion'].boostPercent : stats.spd;
-
+        let potion = potions['spdPotion'];
+        return potion.isActive ? stats.spd + stats.spd * potion.boostPercent / 100 : stats.spd;
     }
 }
 
@@ -62,15 +56,10 @@ var hero = new Hero(
         new Attack("Fireball", 3, 2, 15, "Throw a fireball at your opponent.")
     ],
     "assets/art/hero.png",
-    // [
-    //     new Potion("Attack Potion", "atk", 25, 20, 3),
-    //     new Potion("Speed Potion", "spd", 25, 20, 3),        
-    //     new Potion("Healing Potion", "currentHp", 25, 0, 3)
-    // ]
     {
-        atkPotion: new Potion("Attack Potion", "atk", 25, 20, 3),
-        spdPotion: new Potion("Speed Potion", "spd", 25, 20, 3),        
-        hpPotion: new Potion("Healing Potion", "currentHp", 25, 0, 3)
+        atkPotion: new Potion("Attack Potion", "atk", 25, 20, 3, "assets/art/attackPotion.png"),
+        spdPotion: new Potion("Speed Potion", "spd", 25, 20, 3, "assets/art/speedPotion.png"),
+        hpPotion: new Potion("Healing Potion", "currentHp", 25, 0, 3, "assets/art/healthPotion.png")
     }
 );
 
@@ -93,7 +82,7 @@ function update() {
     drawEnemyStatusBar();
 }
 
-function drawSprites () {
+function drawSprites() {
     let template = '';
 
     template += `
@@ -110,11 +99,11 @@ function drawSprites () {
 
 function drawHeroStatusBar() {
     let template = `
-        <div id="heroStats" class="col-xs-6 standardBG">
-            <h3>Name: ${hero.name}</h3>
-            <h4>HP: ${hero.stats.currentHp}/${hero.stats.maxHp}</h4>
-            <h4>ATK: ${hero.getAtk()}</h4>
-            <h4>SPD: ${hero.getSpd()}</h4>
+        <div id="hero-stats" class="col-xs-6 standardBG">
+            <h4>Name: ${hero.name}</h4>
+            <p>HP: <span class="standardBG">${hero.stats.currentHp}/${hero.stats.maxHp}</span></p>
+            <p>ATK: ${hero.getAtk()}</p>
+            <p>SPD: ${hero.getSpd()}</p>
         </div>
         <div id="attack-buttons" class="col-xs-3 standardBG">
             <button class="" type="button" onpointerenter="" onpointerleave="" onclick="heroAttack(0)">${hero.attacks[0].name}</button>
@@ -124,8 +113,9 @@ function drawHeroStatusBar() {
         <div id="potion-buttons" class="col-xs-3 standardBG">
     `
     for (let pot in hero.potions) {
+        let potion = hero.potions[pot];
         template += `
-            <button type="button" onpointerenter="" onpointerleave="" onclick="usePotion('${pot}')">${hero.potions[pot].name}</button>
+            <img type="button" onpointerenter="" onpointerleave="" onclick="usePotion('${pot}')" src="${potion.image}" alt="${potion.name}">
         `
     }
 
@@ -136,12 +126,8 @@ function drawHeroStatusBar() {
 
 function drawEnemyStatusBar() {
     let template = `
-        <div id="enemyName">
-            <h3>Name: ${currentEnemy.name}</h3>
-        </div>
-        <div id="enemyHpText">
-            <h3>HP: ${currentEnemy.stats.currentHp}/${currentEnemy.stats.maxHp}</h3>
-        </div>
+        <h3>Name: ${currentEnemy.name}</h3>
+        <h3>HP: ${currentEnemy.stats.currentHp}/${currentEnemy.stats.maxHp}</h3>
     `
 
     document.getElementById('enemy-status-bar').innerHTML = template;

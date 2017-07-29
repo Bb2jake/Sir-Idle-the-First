@@ -4,6 +4,8 @@ body {
 }
 
 .standardBG {
+  border-image: url("../art/standardBG.png") 15 fill;
+  border-image-width: 20px;
   color: white;
   padding: 5px;
 }
@@ -87,6 +89,32 @@ button {
   display: block;
 }
 
-#hero-status-bar button {
-  margin: 1em auto;
+#hero-status-bar {
+  width: 100%;
+}
+
+#hero-stats, #attack-buttons, #potion-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+}
+
+#potion-buttons img {
+  max-height: 30%;
+  width: auto;
+}
+
+#hero-status-bar-container {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  html * {
+    font-size: 12px;
+  }
+  #status-bar {
+    bottom: 70%;
+  }
 }
