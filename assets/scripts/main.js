@@ -21,8 +21,39 @@ function Combatant(name, stats, attacks, image) {
     this.image = image;
 }
 
+function Hero(name, stats, attacks, image, potions) {
+    Combatant.call(this, name, stats, attacks, image);
+    // this.atkPotion = getPotion("atk");
+    // this.spdPotion = getPotion("spd");
+    // this.hpPotion = getPotion("cu")
+    this.potions = potions;
+
+    // function getPotion(name) {
+
+    // }
+
+    this.getAtk = function () {
+        return potions['atkPotion'].isActive ? stats.atk * potions['atkPotion'].boostPercent : stats.atk;
+    }
+
+    this.getSpd = function () {
+        return potions['spdPotion'].isActive ? stats.spd * potions['spdPotion'].boostPercent : stats.spd;
+
+    }
+}
+
+function Potion(name, boostStat, boostPercent, boostTime, quantity, image) {
+    this.name = name;
+    this.boostStat = boostStat;
+    this.boostPercent = boostPercent;
+    this.boostTime = boostTime;
+    this.quantity = quantity;
+    this.image = image;
+    this.isActive = false;
+}
+
 // Fighters //
-var hero = new Combatant(
+var hero = new Hero(
     "Kai",
     new Stats(100, 10, 1),
     [
@@ -30,7 +61,17 @@ var hero = new Combatant(
         new Attack("Leg Sweep", 1, 0.5, 10, "Sweep the leg! Resets opponents attack and stuns for 2 seconds.", true),
         new Attack("Fireball", 3, 2, 15, "Throw a fireball at your opponent.")
     ],
-    "assets/art/hero.png"
+    "assets/art/hero.png",
+    // [
+    //     new Potion("Attack Potion", "atk", 25, 20, 3),
+    //     new Potion("Speed Potion", "spd", 25, 20, 3),        
+    //     new Potion("Healing Potion", "currentHp", 25, 0, 3)
+    // ]
+    {
+        atkPotion: new Potion("Attack Potion", "atk", 25, 20, 3),
+        spdPotion: new Potion("Speed Potion", "spd", 25, 20, 3),        
+        hpPotion: new Potion("Healing Potion", "currentHp", 25, 0, 3)
+    }
 );
 
 var lionMouse = new Combatant(
@@ -38,7 +79,7 @@ var lionMouse = new Combatant(
     new Stats(50, 7, 2),
     [
         new Attack("Bite", 1, 1, 0),
-        new Attack("Tail Swipe", 1, 0.5, 10),
+        new Attack("Tail Swipe", 1, 0.5, 10, "", true),
         new Attack("Body Slam", 3, 2, 15)
     ],
     "assets/art/lionMouse.png"
@@ -47,6 +88,12 @@ var lionMouse = new Combatant(
 var currentEnemy = lionMouse;
 
 function update() {
+    drawSprites();
+    drawHeroStatusBar();
+    drawEnemyStatusBar();
+}
+
+function drawSprites () {
     let template = '';
 
     template += `
@@ -59,24 +106,30 @@ function update() {
     `
 
     document.getElementById('combatants').innerHTML = template;
-    drawHeroStatusBar();
-    drawEnemyStatusBar();
 }
 
 function drawHeroStatusBar() {
     let template = `
-        <div id="heroName">
+        <div id="heroStats" class="col-xs-6 standardBG">
             <h3>Name: ${hero.name}</h3>
+            <h4>HP: ${hero.stats.currentHp}/${hero.stats.maxHp}</h4>
+            <h4>ATK: ${hero.getAtk()}</h4>
+            <h4>SPD: ${hero.getSpd()}</h4>
         </div>
-        <div id="heroHpText">
-            <h3>HP: ${hero.stats.currentHp}/${hero.stats.maxHp}</h3>
-        </div>
-        <div id="attack-buttons">
+        <div id="attack-buttons" class="col-xs-3 standardBG">
             <button class="" type="button" onpointerenter="" onpointerleave="" onclick="heroAttack(0)">${hero.attacks[0].name}</button>
             <button class="" type="button" onpointerenter="" onpointerleave="" onclick="heroAttack(1)">${hero.attacks[1].name}</button>
             <button class="" type="button" onpointerenter="" onpointerleave="" onclick="heroAttack(2)">${hero.attacks[2].name}</button>
         </div>
+        <div id="potion-buttons" class="col-xs-3 standardBG">
     `
+    for (let pot in hero.potions) {
+        template += `
+            <button type="button" onpointerenter="" onpointerleave="" onclick="usePotion('${pot}')">${hero.potions[pot].name}</button>
+        `
+    }
+
+    template += `</div>`
 
     document.getElementById('hero-status-bar').innerHTML = template;
 }
@@ -92,6 +145,12 @@ function drawEnemyStatusBar() {
     `
 
     document.getElementById('enemy-status-bar').innerHTML = template;
+}
+
+function usePotion(id) {
+    console.log(hero.potions);
+    hero.potions[id].isActive = true;
+    update();
 }
 
 function heroAttack(attackNum) {

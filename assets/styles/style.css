@@ -3,6 +3,11 @@ body {
   overflow: hidden;
 }
 
+.standardBG {
+  color: white;
+  padding: 5px;
+}
+
 #status-bar {
   border-image: url("../art/standardBG.png") 15 fill;
   border-image-width: 20px;
@@ -25,6 +30,7 @@ body {
 #hard-reset-btn {
   display: flex;
   align-items: flex-end;
+  justify-content: center;
   margin-bottom: 1%;
 }
 
@@ -63,16 +69,16 @@ button {
 .hero {
   height: 50%;
   position: absolute;
-  bottom: 11em;
-  left: 5em;
+  bottom: 5%;
+  left: 3%;
   max-width: 40%;
 }
 
 .enemy {
   height: 30%;
   position: absolute;
-  bottom: 5em;
-  right: 5em;
+  bottom: 5%;
+  right: 3%;
   max-width: 40%;
 }
 
@@ -81,10 +87,6 @@ button {
   display: block;
 }
 
-#attack-buttons {
-  margin: 3em;
-}
-
-.hero button {
-  margin-right: 3em;
+#hero-status-bar button {
+  margin: 1em auto;
 }

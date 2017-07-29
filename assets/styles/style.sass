@@ -1,10 +1,21 @@
 @import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
 
+// *
+//     outline: 2px solid blue;
+
+$standardBG : url("../art/standardBG.png");
+
 body
     overflow: hidden;
 
+.standardBG
+    // border-image: $standardBG 15 fill;
+    // border-image-width: 20px;
+    color: white;
+    padding: 5px;
+
 #status-bar
-    border-image: url("../art/standardBG.png") 15 fill;
+    border-image: $standardBG 15 fill;
     border-image-width: 20px;
     position: absolute;
     top: 0;
@@ -23,10 +34,11 @@ body
 #hard-reset-btn
     display: flex;
     align-items: flex-end;
+    justify-content: center;
     margin-bottom: 1%;
 
 button
-    border-image: url("../art/standardBG.png") 15 fill;
+    border-image: $standardBG 15 fill;
     border-image-width: 10px;
     color: white;
 
@@ -56,23 +68,20 @@ button
 .hero
     height: 50%;
     position: absolute;
-    bottom: 11em;
-    left: 5em;
+    bottom: 5%;
+    left: 3%;
     max-width: 40%;
 
 .enemy
     height: 30%;
     position: absolute;
-    bottom: 5em;
-    right: 5em;
+    bottom: 5%;
+    right: 3%;
     max-width: 40%;
 
 .hero img, .enemy img
     height: 100%;
     display: block;
 
-#attack-buttons
-    margin: 3em;
-
-.hero button
-    margin-right: 3em;
+#hero-status-bar button
+    margin: 1em auto;
