@@ -15,23 +15,56 @@
             <div class="container" id="status-bar-container">
                 <div id="status-bar" class="row vertical-align">
                     <div id="hero-status-bar-container" class="text-center col-xs-5">
-                        <div class="row" id="hero-status-bar"></div>
+                        <div class="row" id="hero-status-bar">
+                            <div id="hero-stats" class="col-xs-6 standardBG">
+                                <h4>Name: Kai</h4>
+                                <p>HP: <span id="heroHp" class="standardBG"></span></p>
+                                <p id="heroLv"></p>
+                                <p>ATK: <span id="heroAtk"></span></p>
+                                <p>SPD: <span id="heroSpd"></span></p>
+                            </div>
+                            <div id="attack-buttons" class="col-xs-3 standardBG">
+                                <button id="heroAtk0" class="standardBG" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.heroAttack(0)"></button>
+                                <button id="heroAtk1" class="standardBG" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.heroAttack(1)"></button>
+                                <button id="heroAtk2" class="standardBG" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.heroAttack(2)"></button>
+                            </div>
+                            <div id="potion-buttons" class="col-xs-3 standardBG">
+                                <button id="potion0" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.usePotion(0)"><span id="potion0Qty"></span><img src="assets/art/healthPotion.png" alt="potion 0"></button>
+                                <button id="potion1" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.usePotion(1)"><span id="potion1Qty"></span><img src="assets/art/attackPotion.png" alt="potion 1"></button>
+                                <button id="potion2" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.usePotion(2)"><span id="potion2Qty"></span><img src="assets/art/speedPotion.png" alt="potion 2"></button>
+                            </div>
+                        </div>
                     </div>
                     <div id="hard-reset-btn" class="text-center col-xs-2">
-                        <button type="button" class="standardBG" onclick="hardReset()">Reset Game</button>
+                        <button type="button" class="standardBG" onclick="app.controller.hardReset()">Reset Game</button>
                     </div>
-                    <div id="enemy-status-bar" class="text-center col-xs-5"></div>
+                    <div id="enemy-status-bar" class="text-center col-xs-5">
+                        <div id="enemy-stats" class="standardBG">
+                            <h4 id="enemy-name">Name: </h4>
+                            <p id="enemy-hp">HP: </p>
+                            <p id="enemy-atk">ATK: </p>
+                            <p id="enemy-spd">SPD: </p>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="combatants">
-
+                <div id="hero" class="hero text-center">
+                    <img src="assets/art/hero.png" alt="hero image" class="animated">
+                </div>
+                <div id="enemy1" class="enemy">
+                    <img id="enemy1Img" src="" alt="enemy image" class="animated">
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Bootstrap JS script in case needed -->
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
-    <script src="assets/scripts/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="assets/scripts/service.js"></script>
+    <script src="assets/scripts/controller.js"></script>
+    <script src="assets/scripts/app.js"></script>
 </body>
 
 </html>
