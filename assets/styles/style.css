@@ -36,12 +36,6 @@ body {
   margin-bottom: 1%;
 }
 
-button {
-  border-image: url("../art/standardBG.png") 15 fill;
-  border-image-width: 10px;
-  color: white;
-}
-
 .wrapper {
   width: 100%;
   padding-bottom: 75%;
@@ -51,7 +45,7 @@ button {
 }
 
 #background {
-  background: url("../art/prairieBG.png") no-repeat;
+  background: no-repeat;
   background-size: 100% 100%;
   position: absolute;
   top: 0;
@@ -77,11 +71,11 @@ button {
 }
 
 .enemy {
-  height: 30%;
+  max-height: 60%;
+  max-width: 40%;
   position: absolute;
   bottom: 5%;
   right: 3%;
-  max-width: 40%;
 }
 
 .hero img, .enemy img {
@@ -89,11 +83,19 @@ button {
   display: block;
 }
 
+.enemy img {
+  width: 80%;
+}
+
 #hero-status-bar {
   width: 100%;
 }
 
-#hero-stats, #attack-buttons, #potion-buttons {
+#enemy-status-bar, #hero-status-bar-container {
+  padding-right: 0;
+}
+
+#hero-stats, #attack-buttons, #potion-buttons, #enemy-stats {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -102,8 +104,12 @@ button {
 }
 
 #potion-buttons img {
-  max-height: 30%;
-  width: auto;
+  width: 50%;
+}
+
+#potion-buttons button {
+  background-color: Transparent;
+  border: none;
 }
 
 #hero-status-bar-container {
