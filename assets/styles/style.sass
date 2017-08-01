@@ -94,6 +94,28 @@ body
     align-items: center;
     height: 100%;
 
+.attack-bar-container
+    max-width: 40%;
+    
+.attack-bar
+    height: 30px;
+    width: 300px;
+    max-width: 100%;
+    padding: 2px;
+
+#heroAttackBarContainer
+    float: left;
+    margin: 18% 0 0 5%;
+
+#enemyAttackBarContainer
+    float: right;
+    margin: 18% 5% 0 0;
+
+.attack-gauge
+    float: left;
+    height: 100%;
+    opacity: 0.6;
+
 #potion-buttons img
     width: 50%;
     
@@ -106,9 +128,27 @@ body
 
 .defeated-overlay
     display: none !important;
+    max-width: 80%;
+    width: 200px;
+    height: auto !important;
+    position: absolute;
 
-@media (max-width: 768px)
+#hero .defeated-overlay
+    bottom: 200px;
+    left: 40px;
+
+#enemy1 .defeated-overlay
+    bottom: 100px;
+
+@media (max-width: 900px)
     html *
         font-size: 12px;
     #status-bar
         bottom: 70%;
+    .attack-bar-container
+        margin-top: 24% !important;
+    #hero .defeated-overlay
+        bottom: 75px;
+        left: 0;
+
+// @media (max-width: 700px)

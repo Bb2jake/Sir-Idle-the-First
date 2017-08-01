@@ -24,9 +24,9 @@
                                 <p>SPD: <span id="heroSpd"></span></p>
                             </div>
                             <div id="attack-buttons" class="col-xs-3 standardBG">
-                                <button id="heroAtk0" class="standardBG" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.heroAttack(0)"></button>
-                                <button id="heroAtk1" class="standardBG" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.heroAttack(1)"></button>
-                                <button id="heroAtk2" class="standardBG" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.heroAttack(2)"></button>
+                                <button id="heroAtk0" class="standardBG" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.selectHeroAttack(0)"></button>
+                                <button id="heroAtk1" class="standardBG" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.selectHeroAttack(1)"></button>
+                                <button id="heroAtk2" class="standardBG" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.selectHeroAttack(2)"></button>
                             </div>
                             <div id="potion-buttons" class="col-xs-3 standardBG">
                                 <button id="potion0" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.usePotion(0)"><span id="potion0Qty"></span><img src="assets/art/healthPotion.png" alt="potion 0"></button>
@@ -49,6 +49,20 @@
                 </div>
             </div>
             <div id="combatants">
+                <div class="attack-bars">
+                    <div id="heroAttackBarContainer" class="attack-bar-container">
+                        <h4 id="heroAttackName"></h4>
+                        <div id="heroAttackBar" class="standardBG attack-bar text-center">
+                            <img src="assets/art/fillGauge.png" id="heroAttackGauge" class="attack-gauge" alt="">
+                        </div>
+                    </div>
+                    <div id="enemyAttackBarContainer" class="attack-bar-container">
+                        <h4 id="enemyAttackName"></h4>
+                        <div id="enemyAttackBar" class="standardBG attack-bar text-center">
+                            <img src="assets/art/fillGauge.png" id="enemyAttackGauge" class="attack-gauge" alt="">
+                        </div>
+                    </div>
+                </div>
                 <div id="hero" class="hero text-center">
                     <img src="assets/art/hero.png" alt="hero image" class="animated">
                     <img class="defeated-overlay" src="assets/art/defeatedOverlay.png" alt="defeated overlay">

@@ -1,8 +1,16 @@
-function Service() {
+function Service(toggleInputButtonsCb, cont) {
+    var running = true;
     var currentZone;
     var hero;
     var currentEnemy;
     var enemies;
+    var controller = cont;
+
+    this.getRunning = function () {
+        return running;
+    }
+
+    var toggleInputButtonsCallback = toggleInputButtonsCb;
 
     this.start = function () {
         initHero();
@@ -11,6 +19,8 @@ function Service() {
         currentZone = zones[0];
         initEnemies();
         currentEnemy = enemies[0];
+        selectEnemyAttack();
+        tick();
     }
 
     function Attack(name, potency, castTime, cooldown, description, stun = false) {
@@ -34,6 +44,12 @@ function Service() {
         this.stats = stats;
         this.attacks = attacks;
         this.image = image;
+        this.chosenAttack;
+        this.attackTimer = 0;
+
+        this.castTime = function () {
+            return this.chosenAttack.castTime / this.stats.spd;
+        }
     }
 
     function Hero(name, stats, attacks, image, potions) {
@@ -42,11 +58,18 @@ function Service() {
         this.level = 1;
         this.currentExp = 0;
         this.expToLevel = 10;
+        this.chosenPotion;
+    }
+
+    function getHeroAtk() {
+        let potion = hero.potions[1];
+        return potion.isActive ? Math.floor(hero.stats.atk + hero.stats.atk * potion.boostPercent / 100) : hero.stats.atk;
     }
 
     this.getHeroAtk = function () {
-        let potion = hero.potions[1];
-        return potion.isActive ? Math.floor(hero.stats.atk + hero.stats.atk * potion.boostPercent / 100) : hero.stats.atk;
+        // let potion = hero.potions[1];
+        // return potion.isActive ? Math.floor(hero.stats.atk + hero.stats.atk * potion.boostPercent / 100) : hero.stats.atk;
+        getHeroAtk();
     }
 
     this.getHeroSpd = function () {
@@ -60,7 +83,7 @@ function Service() {
             hero.stats.maxHp = Math.floor(hero.stats.maxHp * 1.1);
             hero.stats.currentHp = hero.stats.maxHp;
             hero.stats.atk = Math.floor(hero.stats.atk * 1.1);
-            hero.stats.spd = Math.floor(hero.stats.spd * 1.1);
+            hero.stats.spd = +((hero.stats.spd * 1.1).toFixed(2));
 
             hero.currentExp -= hero.expToLevel;
             hero.expToLevel = hero.level * 10;
@@ -69,6 +92,14 @@ function Service() {
 
     this.getHero = function () {
         return JSON.parse(JSON.stringify(hero));
+    }
+
+    this.getHeroAttackScale = function () {
+        return hero.chosenAttack ? Math.min(hero.attackTimer / hero.castTime() * 100) : 0;
+    }
+
+    this.getEnemyAttackScale = function () {
+        return currentEnemy.chosenAttack ? Math.min(100, currentEnemy.attackTimer / currentEnemy.castTime() * 100) : 0;
     }
 
     this.getCurrentEnemy = function () {
@@ -102,7 +133,7 @@ function Service() {
     function initHero() {
         hero = new Hero(
             "Kai",
-            new Stats(100, 10, 50),
+            new Stats(100, 10, 0.5),
             [
                 new Attack("Slash", 1, 1, 0, "Slash with your sword."),
                 new Attack("Leg Sweep", 1, 0.5, 10, "Sweep the leg! Resets opponents attack and stuns for 2 seconds.", true),
@@ -125,7 +156,7 @@ function Service() {
         enemies = [
             new Combatant(
                 "Lion Mouse",
-                new Stats(50 * zoneNum, 7 * zoneNum, 75),
+                new Stats(50 * zoneNum, 7 * zoneNum, 0.75),
                 [
                     new Attack("Bite", 1, 1, 0),
                     new Attack("Tail Swipe", 1, 0.5, 10, "", true),
@@ -134,7 +165,7 @@ function Service() {
                 "assets/art/lionMouse.png"),
             new Combatant(
                 "Harpy",
-                new Stats(100 * zoneNum, 15 * zoneNum, 60),
+                new Stats(100 * zoneNum, 15 * zoneNum, 0.6),
                 [
                     new Attack("Claw", 1, 1, 0),
                     new Attack("Scream", 1, 0.5, 10, "", true),
@@ -143,7 +174,7 @@ function Service() {
                 "assets/art/harpy.png"),
             new Combatant(
                 "Baby Hydra",
-                new Stats(300 * zoneNum, 10 * zoneNum, 50),
+                new Stats(300 * zoneNum, 10 * zoneNum, 0.5),
                 [
                     new Attack("Bite", 1, 1, 0),
                     new Attack("Tail Swipe", 1, 0.5, 10, "", true),
@@ -156,7 +187,7 @@ function Service() {
 
     var boss = new Combatant(
         "Prairie King",
-        new Stats(500, 20, 100),
+        new Stats(500, 20, 1),
         [
             new Attack("Gnaw", 1, 1, 0),
             new Attack("Howl", 1, 0.5, 10, "", true),
@@ -187,23 +218,48 @@ function Service() {
         return false;
     }
 
-    this.heroAttack = function heroAttack(attackNum) {
-        // TODO: verify attack num exists and not on cooldown here
-        if (hero.stats.currentHp > 0 && currentEnemy && currentEnemy.stats.currentHp > 0) {
-            attack(hero, attackNum, this.getHeroAtk(), currentEnemy);
+    this.selectHeroAttack = function (atkNum) {
+        hero.chosenAttack = hero.attacks[atkNum];
+        hero.attackTimer = 0;
+        if (hero.chosenAttack) {
+            running = true;
+            toggleInputButtonsCallback(false);
         }
     }
 
-    this.enemyAttack = function () {
+    function selectEnemyAttack() {
+        // TODO: Make this more AI like
         let rnd = Math.floor(Math.random() * currentEnemy.attacks.length);
-        attack(currentEnemy, rnd, currentEnemy.stats.atk, hero);
+        currentEnemy.attackTimer = 0;
+        currentEnemy.chosenAttack = currentEnemy.attacks[rnd];
     }
 
-    function attack(attacker, attackNum, atkPower, target) {
-        target.stats.currentHp -= attacker.attacks[attackNum].potency * atkPower;
-        if (target.stats.currentHp < 0) {
-            target.stats.currentHp = 0;
+    function heroAttack() {
+        currentEnemy.stats.currentHp -= hero.chosenAttack.potency * getHeroAtk();
+        if (currentEnemy.stats.currentHp < 0) {
+            currentEnemy.stats.currentHp = 0;
+            enemyDied();
         }
+
+        hero.chosenAttack = null;
+    }
+
+    function enemyAttack() {
+        hero.stats.currentHp -= currentEnemy.chosenAttack.potency * currentEnemy.atk;
+        if (hero.stats.currentHp < 0) {
+            hero.stats.currentHp = 0;
+            heroDied();
+        }
+
+        selectEnemyAttack();
+    }
+
+    function heroDied() {
+        // TODO: Show dead hero here
+    }
+
+    function enemyDied() {
+        // TODO: Show dead enemy here
     }
 
     this.enemyDefeated = function () {
@@ -229,7 +285,6 @@ function Service() {
                 currentEnemy = enemies[0];
             }
         } else {
-            // TODO: Have these be dynamically created enemies instead.
             currentEnemy = enemies[enemyNum + 1];
         }
     }
@@ -240,5 +295,33 @@ function Service() {
 
     this.getZoneImg = function () {
         return currentZone.image;
+    }
+
+    function scaleAttackGauges() {
+        hero.attackTimer += 1 / 30; // 30 FPS;
+        currentEnemy.attackTimer += 1 / 30;
+
+        if (hero.attackTimer >= hero.castTime()) {
+            heroAttack();
+        }
+
+        if (currentEnemy.stats.currentHp > 0 && currentEnemy.attackTimer >= currentEnemy.castTime()) {
+            enemyAttack();
+        }
+
+        controller.scaleAttackGauges();
+    }
+
+    function tick() {
+        if (running) {
+            if (!hero.chosenAttack && !hero.chosenPotion) {
+                running = false;
+                toggleInputButtonsCallback(true);
+            } else {
+                scaleAttackGauges();
+            }
+        }
+
+        setTimeout(tick, 1000 / 30);
     }
 }
