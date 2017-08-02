@@ -1,16 +1,14 @@
-function Service(toggleInputButtonsCb, cont) {
-    var running = true;
+function Service(cont) {
+    var isPaused = false;
     var currentZone;
     var hero;
     var currentEnemy;
     var enemies;
     var controller = cont;
 
-    this.getRunning = function () {
-        return running;
+    this.getIsPaused = function () {
+        return isPaused;
     }
-
-    var toggleInputButtonsCallback = toggleInputButtonsCb;
 
     this.start = function () {
         initHero();
@@ -67,14 +65,12 @@ function Service(toggleInputButtonsCb, cont) {
     }
 
     this.getHeroAtk = function () {
-        // let potion = hero.potions[1];
-        // return potion.isActive ? Math.floor(hero.stats.atk + hero.stats.atk * potion.boostPercent / 100) : hero.stats.atk;
-        getHeroAtk();
+        return getHeroAtk();
     }
 
     this.getHeroSpd = function () {
         let potion = hero.potions[2];
-        return potion.isActive ? Math.floor(hero.stats.spd + hero.stats.spd * potion.boostPercent / 100) : hero.stats.spd;
+        return potion.isActive ? +(hero.stats.spd + hero.stats.spd * potion.boostPercent / 100).toFixed(2) : hero.stats.spd;
     }
 
     function checkHeroLevel() {
@@ -222,8 +218,9 @@ function Service(toggleInputButtonsCb, cont) {
         hero.chosenAttack = hero.attacks[atkNum];
         hero.attackTimer = 0;
         if (hero.chosenAttack) {
-            running = true;
-            toggleInputButtonsCallback(false);
+            isPaused = false;
+            controller.toggleInputButtons(false);
+            controller.showHeroAttackName(hero.chosenAttack.name);
         }
     }
 
@@ -232,47 +229,56 @@ function Service(toggleInputButtonsCb, cont) {
         let rnd = Math.floor(Math.random() * currentEnemy.attacks.length);
         currentEnemy.attackTimer = 0;
         currentEnemy.chosenAttack = currentEnemy.attacks[rnd];
+        controller.showEnemyAttackName(currentEnemy.chosenAttack.name);
     }
 
     function heroAttack() {
         currentEnemy.stats.currentHp -= hero.chosenAttack.potency * getHeroAtk();
-        if (currentEnemy.stats.currentHp < 0) {
+        hero.chosenAttack = null;
+        if (currentEnemy.stats.currentHp <= 0) {
             currentEnemy.stats.currentHp = 0;
             enemyDied();
         }
 
-        hero.chosenAttack = null;
+        controller.showEnemyHp();
     }
 
     function enemyAttack() {
-        hero.stats.currentHp -= currentEnemy.chosenAttack.potency * currentEnemy.atk;
-        if (hero.stats.currentHp < 0) {
+        hero.stats.currentHp -= currentEnemy.chosenAttack.potency * currentEnemy.stats.atk;
+        if (hero.stats.currentHp <= 0) {
             hero.stats.currentHp = 0;
             heroDied();
         }
 
+        controller.showHeroHp();
         selectEnemyAttack();
     }
 
     function heroDied() {
         // TODO: Show dead hero here
+        isPaused = true;
+        controller.toggleInputButtons(false);
+        controller.
     }
 
     function enemyDied() {
-        // TODO: Show dead enemy here
+        isPaused = true;
+        controller.toggleInputButtons(false);
+        hero.currentExp += Math.floor(currentEnemy.stats.maxHp * currentEnemy.stats.atk * currentEnemy.stats.spd / 40);
+        checkHeroLevel();
+
+        currentEnemy.stats.currentHp = currentEnemy.stats.maxHp;
+
+        controller.fadeOutEnemy(selectNextEnemy);
     }
 
-    this.enemyDefeated = function () {
+    function selectNextEnemy() {
         if (currentEnemy == boss) {
             // TODO: Game ends here;
             return;
         }
-
+        
         let enemyNum = enemies.indexOf(currentEnemy);
-        hero.currentExp += Math.floor(currentEnemy.stats.maxHp * currentEnemy.stats.atk * currentEnemy.stats.spd / 4000);
-        checkHeroLevel();
-
-        currentEnemy.stats.currentHp = currentEnemy.stats.maxHp;
 
         if (enemyNum >= enemies.length - 1) {
             let zoneNum = zones.indexOf(currentZone);
@@ -287,6 +293,13 @@ function Service(toggleInputButtonsCb, cont) {
         } else {
             currentEnemy = enemies[enemyNum + 1];
         }
+
+        controller.fadeInEnemy(newEnemySpawned);
+    }
+
+    function newEnemySpawned() {
+        selectEnemyAttack();
+        controller.toggleInputButtons(true);
     }
 
     function reviveHero() {
@@ -313,10 +326,10 @@ function Service(toggleInputButtonsCb, cont) {
     }
 
     function tick() {
-        if (running) {
+        if (!isPaused) {
             if (!hero.chosenAttack && !hero.chosenPotion) {
-                running = false;
-                toggleInputButtonsCallback(true);
+                isPaused = true;
+                controller.toggleInputButtons(true);
             } else {
                 scaleAttackGauges();
             }

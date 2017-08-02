@@ -74,7 +74,7 @@ body
     bottom: 5%;
     right: 3%;
 
-.hero img, .enemy img
+#hero-img, #enemy1Img
     height: 100%;
     display: block;
 
@@ -115,6 +115,7 @@ body
     float: left;
     height: 100%;
     opacity: 0.6;
+    width: 0;
 
 #potion-buttons img
     width: 50%;
@@ -127,17 +128,18 @@ body
     display: flex;
 
 .defeated-overlay
-    display: none !important;
     max-width: 80%;
     width: 200px;
     height: auto !important;
     position: absolute;
 
-#hero .defeated-overlay
+#hero-defeated-overlay
+    display: none;
     bottom: 200px;
     left: 40px;
 
-#enemy1 .defeated-overlay
+#enemy-defeated-overlay
+    display: none;
     bottom: 100px;
 
 @media (max-width: 900px)

@@ -1,5 +1,5 @@
 function Controller() {
-    var service = new Service(toggleInputButtons, this);
+    var service = new Service(this);
 
     function start() {
         service.start();
@@ -41,6 +41,10 @@ function Controller() {
         }
     }
 
+    this.showHeroHp = function () {
+        showHeroHp();
+    }
+
     function showHeroHp() {
         let hero = service.getHero();
         document.getElementById("heroHp").innerHTML = `${hero.stats.currentHp}/${hero.stats.maxHp}`;
@@ -77,14 +81,13 @@ function Controller() {
         service.selectHeroAttack(atkNum, heroAttacks);
     }
 
-    function heroAttacks () {
+    function heroAttacks() {
         showEnemyHp();
 
         let currentEnemy = service.getCurrentEnemy();
 
         if (currentEnemy.stats.currentHp <= 0) {
             $("#enemy1Img").addClass("fadeOut").one("animationend", function () {
-                service.enemyDefeated();
                 showEnemyStatusBar();
                 showEnemySprite();
                 showHeroExp();
@@ -97,7 +100,31 @@ function Controller() {
         }
     }
 
-    this.updateEnemyHp = function() {
+    this.fadeOutEnemy = function (callback) {
+        document.getElementById("enemy-defeated-overlay").style.display = "block";
+        $("#enemy-defeated-overlay").addClass("fadeOut").one("animationend", () => {
+            $("#enemy-defeated-overlay").removeClass("fadeOut");
+        })
+
+        $("#enemy1Img").addClass("fadeOut").one("animationend", () => {
+            showHeroExp();
+            $("#enemy1Img").removeClass("fadeOut");
+            document.getElementById("enemy-defeated-overlay").style.display = "none";
+            callback();
+        })
+    }
+
+    this.fadeInEnemy = function (callback) {
+        showEnemySprite();
+        showEnemyStatusBar();
+        showZone();
+        $("#enemy1Img").addClass("fadeIn").one("animationend", function () {
+            $("#enemy1Img").removeClass("fadeIn");
+            callback();
+        })
+    }
+
+    this.showEnemyHp = function () {
         showEnemyHp();
     }
 
@@ -115,30 +142,47 @@ function Controller() {
         }
     }
 
-    function toggleInputButtons(value) {
+    this.toggleInputButtons = function (toggleOn) {
+        toggleInputButtons(toggleOn);
+    }
+
+    function toggleInputButtons(toggleOn) {
         let atkBtns = document.getElementById("attack-buttons").children;
         let potBtns = document.getElementById("potion-buttons").children;
 
         for (let i = 0; i < atkBtns.length; i++) {
             let atk = atkBtns[i];
             let pot = potBtns[i];
-            if (value) {
+            
+            if (toggleOn) {
                 atk.removeAttribute("disabled");
                 pot.removeAttribute("disabled");
             } else {
                 atk.setAttribute("disabled", "disabled");
                 pot.setAttribute("disabled", "disabled");
-
             }
-            atk.style.opacity = value ? 1 : 0.5;
-            pot.style.opacity = value ? 1 : 0.5;
+
+            atk.style.opacity = toggleOn ? 1 : 0.5;
+            pot.style.opacity = toggleOn ? 1 : 0.5;
         }
 
-        if (value)
+        if (toggleOn)
             document.getElementById("heroAttackName").innerText = "Choose an attack";
     }
 
-    this.scaleAttackGauges = function() {
+    this.showHeroAttackName = function (name) {
+        document.getElementById("heroAttackName").innerText = name;
+    }
+
+    this.showHeroDefeatedOverlay = function (display) {
+        document.getElementById("hero-attack-overlay").style.display = display;
+    }
+
+    this.showEnemyAttackName = function (name) {
+        document.getElementById("enemyAttackName").innerText = name;
+    }
+
+    this.scaleAttackGauges = function () {
         document.getElementById("heroAttackGauge").style.width = service.getHeroAttackScale() + "%";
         document.getElementById("enemyAttackGauge").style.width = service.getEnemyAttackScale() + "%";
     }
