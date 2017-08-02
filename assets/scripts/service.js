@@ -1,5 +1,5 @@
 function Service(cont) {
-    var isPaused = false;
+    var isPaused = true;
     var currentZone;
     var hero;
     var currentEnemy;
@@ -28,6 +28,7 @@ function Service(cont) {
         this.cooldown = cooldown;
         this.description = description;
         this.stun = stun;
+        this.cooldownRemaining = 0;
     }
 
     function Stats(maxHp, atk, spd) {
@@ -84,6 +85,8 @@ function Service(cont) {
             hero.currentExp -= hero.expToLevel;
             hero.expToLevel = hero.level * 10;
         }
+
+        controller.showHeroStats();
     }
 
     this.getHero = function () {
@@ -91,7 +94,12 @@ function Service(cont) {
     }
 
     this.getHeroAttackScale = function () {
-        return hero.chosenAttack ? Math.min(hero.attackTimer / hero.castTime() * 100) : 0;
+        if (hero.chosenAttack)
+            return Math.min(hero.attackTimer / hero.castTime() * 100);
+        else if (hero.chosenPotion)
+            return Math.min(hero.attackTimer / hero.chosenPotion.castTime * 100);
+
+        return 0;
     }
 
     this.getEnemyAttackScale = function () {
@@ -102,14 +110,16 @@ function Service(cont) {
         return JSON.parse(JSON.stringify(currentEnemy));
     }
 
-    function Potion(name, boostStat, boostPercent, boostTime, quantity, image, description) {
+    function Potion(name, boostStat, boostPercent, boostTime, castTime, quantity, image, description) {
         this.name = name;
         this.boostStat = boostStat;
         this.boostPercent = boostPercent;
         this.boostTime = boostTime;
+        this.castTime = castTime;
         this.quantity = quantity;
         this.image = image;
         this.description = description;
+        this.boostTimeRemaining;
         this.isActive = false;
     }
 
@@ -137,9 +147,9 @@ function Service(cont) {
             ],
             "assets/art/hero.png",
             [
-                new Potion("Healing Potion", "currentHp", 20, 0, 3, "assets/art/healthPotion.png", "Heal 20% of your max HP"),
-                new Potion("Attack Potion", "atk", 20, 20, 3, "assets/art/attackPotion.png", "Increases attack by 20% for 20 seconds"),
-                new Potion("Speed Potion", "spd", 20, 20, 3, "assets/art/speedPotion.png", "Increases speed by 20% for 20 seconds")
+                new Potion("Healing Potion", "currentHp", 20, 0, 0.5, 3, "assets/art/healthPotion.png", "Heal 20% of your max HP"),
+                new Potion("Attack Potion", "atk", 20, 20, 1, 3, "assets/art/attackPotion.png", "Increases attack by 20% for 20 seconds"),
+                new Potion("Speed Potion", "spd", 20, 20, 1, 3, "assets/art/speedPotion.png", "Increases speed by 20% for 20 seconds")
             ]
         );
     }
@@ -192,26 +202,47 @@ function Service(cont) {
         "assets/art/prairieKing.png"
     );
 
-
     this.tryUsePotion = function (potionNum) {
         let potion = hero.potions[potionNum];
+        hero.attackTimer = 0;
+
         if (potion.quantity > 0 && !potion.isActive) {
             if (potionNum == 0) {
                 if (hero.stats.currentHp < hero.stats.maxHp) {
                     potion.quantity--;
-                    hero.stats.currentHp = Math.min(hero.stats.currentHp + Math.floor(hero.stats.maxHp * potion.boostPercent / 100), hero.stats.maxHp);
+                    hero.chosenPotion = potion;
+                    isPaused = false;
+                    controller.toggleInputButtons(false);
+                    controller.showHeroAttackName("Using " + hero.chosenPotion.name);
                     return true;
                 }
 
                 return false;
             } else {
                 potion.quantity--;
-                potion.isActive = true;
+                hero.chosenPotion = potion;
+                isPaused = false;
+                controller.toggleInputButtons(false);
+                controller.showHeroAttackName("Using " + hero.chosenPotion.name);
                 return true;
             }
         }
 
         return false;
+    }
+
+    function usePotion() {
+        let potionNum = hero.potions.indexOf(hero.chosenPotion);
+        if (potionNum == 0) {
+            hero.stats.currentHp = Math.min(hero.stats.currentHp + Math.floor(hero.stats.maxHp * hero.chosenPotion.boostPercent / 100), hero.stats.maxHp);
+        } else {
+            hero.chosenPotion.isActive = true;
+            hero.chosenPotion.boostTimeRemaining = hero.chosenPotion.boostTime;
+            // TODO: Have the active potion get a highlight effect or something, with a countdown showing how much time remaining
+        }
+
+        controller.showHeroStats();
+        hero.chosenPotion = null;
     }
 
     this.selectHeroAttack = function (atkNum) {
@@ -224,16 +255,22 @@ function Service(cont) {
         }
     }
 
+    // AI chooses attack - for now, it's always the strongest that's off cooldown.
     function selectEnemyAttack() {
-        // TODO: Make this more AI like
-        let rnd = Math.floor(Math.random() * currentEnemy.attacks.length);
+        let attacks = currentEnemy.attacks.filter((attack) => {
+            return attack.cooldownRemaining <= 0;
+        })
+
         currentEnemy.attackTimer = 0;
-        currentEnemy.chosenAttack = currentEnemy.attacks[rnd];
+        currentEnemy.chosenAttack = attacks[attacks.length - 1];
         controller.showEnemyAttackName(currentEnemy.chosenAttack.name);
+        controller.scaleAttackGauges();
     }
 
     function heroAttack() {
         currentEnemy.stats.currentHp -= hero.chosenAttack.potency * getHeroAtk();
+        hero.chosenAttack.cooldownRemaining = hero.chosenAttack.cooldown;
+        controller.showAttackCooldowns();
         hero.chosenAttack = null;
         if (currentEnemy.stats.currentHp <= 0) {
             currentEnemy.stats.currentHp = 0;
@@ -257,8 +294,11 @@ function Service(cont) {
     function heroDied() {
         // TODO: Show dead hero here
         isPaused = true;
+        hero.attacks.forEach(function(attack) {
+            attack.cooldownRemaining = 0;
+        }, this);
         controller.toggleInputButtons(false);
-        controller.
+        controller.showHeroDefeatedOverlay(true);
     }
 
     function enemyDied() {
@@ -277,7 +317,7 @@ function Service(cont) {
             // TODO: Game ends here;
             return;
         }
-        
+
         let enemyNum = enemies.indexOf(currentEnemy);
 
         if (enemyNum >= enemies.length - 1) {
@@ -297,13 +337,36 @@ function Service(cont) {
         controller.fadeInEnemy(newEnemySpawned);
     }
 
+    function selectPrevEnemy() {
+        if (currentEnemy == boss) {
+            currentEnemy = enemies[enemies.length - 1];
+        } else {
+            let enemyNum = enemies.indexOf(currentEnemy);
+            if (enemyNum > 0) {
+                currentEnemy = enemies[enemyNum - 1];
+            } else {
+                let zoneNum = zones.indexOf(currentZone);
+                if (zoneNum > 0) {
+                    currentZone = zones[zoneNum - 1];
+                    currentEnemy = enemies[enemies.length - 1];
+                }
+            }
+        }
+
+        controller.showEnemy();
+        selectEnemyAttack();
+    }
+
     function newEnemySpawned() {
         selectEnemyAttack();
         controller.toggleInputButtons(true);
     }
 
-    function reviveHero() {
-
+    this.reviveHero = function () {
+        // TODO: Revive hero, go back one enemy, and give full hp to both
+        hero.stats.currentHp = hero.stats.maxHp;
+        currentEnemy.stats.currentHp = currentEnemy.stats.maxHp;
+        selectPrevEnemy();
     }
 
     this.getZoneImg = function () {
@@ -311,18 +374,66 @@ function Service(cont) {
     }
 
     function scaleAttackGauges() {
-        hero.attackTimer += 1 / 30; // 30 FPS;
+        hero.attackTimer += 1 / 30; // 30 FPS
         currentEnemy.attackTimer += 1 / 30;
 
-        if (hero.attackTimer >= hero.castTime()) {
-            heroAttack();
+        if (hero.chosenAttack) {
+            if (hero.attackTimer >= hero.castTime())
+                heroAttack();
+        } else if (hero.chosenPotion) {
+            if (hero.attackTimer >= hero.chosenPotion.castTime)
+                usePotion();
         }
+
 
         if (currentEnemy.stats.currentHp > 0 && currentEnemy.attackTimer >= currentEnemy.castTime()) {
             enemyAttack();
         }
 
         controller.scaleAttackGauges();
+    }
+
+    function updatePotions() {
+        hero.potions.forEach(function (potion) {
+            if (potion.isActive) {
+                potion.boostTimeRemaining -= 1 / 30;
+                // TODO: Show seconds left on screen
+                if (potion.boostTimeRemaining <= 0) {
+                    potion.boostTimeRemaining = 0;
+                    deactivatePotion(potion);
+                }
+            }
+        }, this);
+
+        controller.showPotionActiveTimes();
+    }
+
+    function updateAttacks() {
+        hero.attacks.forEach(function (attack) {
+            updateAttack(attack);
+        }, this);
+
+        currentEnemy.attacks.forEach(function (attack) {
+            updateAttack(attack);
+        }, this);
+
+        controller.showAttackCooldowns();
+    }
+
+    function updateAttack(attack) {
+        if (attack.cooldownRemaining > 0) {
+            attack.cooldownRemaining -= 1 / 30;
+            if (attack.cooldownRemaining <= 0) {
+                attack.cooldownRemaining = 0;
+            }
+        }
+    }
+
+    function deactivatePotion(potion) {
+        potion.isActive = false;
+        // TODO: Deactivate on screen
+        controller.showHeroStats();
+        controller.showPotionActiveTimes();
     }
 
     function tick() {
@@ -333,8 +444,11 @@ function Service(cont) {
             } else {
                 scaleAttackGauges();
             }
+
+            updateAttacks();
+            updatePotions();
         }
 
-        setTimeout(tick, 1000 / 30);
+        setTimeout(tick, 1000 / 30); // 30 FPS
     }
 }
