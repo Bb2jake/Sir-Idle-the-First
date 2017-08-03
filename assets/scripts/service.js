@@ -282,6 +282,8 @@ function Service(cont) {
 
     function enemyAttack() {
         hero.stats.currentHp -= currentEnemy.chosenAttack.potency * currentEnemy.stats.atk;
+        currentEnemy.chosenAttack.cooldownRemaining = currentEnemy.chosenAttack.cooldown;
+
         if (hero.stats.currentHp <= 0) {
             hero.stats.currentHp = 0;
             heroDied();
@@ -294,7 +296,7 @@ function Service(cont) {
     function heroDied() {
         // TODO: Show dead hero here
         isPaused = true;
-        hero.attacks.forEach(function(attack) {
+        hero.attacks.forEach(function (attack) {
             attack.cooldownRemaining = 0;
         }, this);
         controller.toggleInputButtons(false);
