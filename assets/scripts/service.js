@@ -171,7 +171,7 @@ function Service(cont) {
                 "assets/art/lionMouse.png"),
             new Combatant(
                 "Harpy",
-                new Stats(100 * zoneNum, 15 * zoneNum, 0.6),
+                new Stats(75 * zoneNum, 10 * zoneNum, 0.6),
                 [
                     new Attack("Claw", 1, 1, 0),
                     new Attack("Scream", 1, 0.5, 10, "", true),
@@ -180,7 +180,7 @@ function Service(cont) {
                 "assets/art/harpy.png"),
             new Combatant(
                 "Baby Hydra",
-                new Stats(300 * zoneNum, 10 * zoneNum, 0.5),
+                new Stats(150 * zoneNum, 10 * zoneNum, 0.5),
                 [
                     new Attack("Bite", 1, 1, 0),
                     new Attack("Tail Swipe", 1, 0.5, 10, "", true),
@@ -193,7 +193,7 @@ function Service(cont) {
 
     var boss = new Combatant(
         "Prairie King",
-        new Stats(500, 20, 1),
+        new Stats(500, 40, 1),
         [
             new Attack("Gnaw", 1, 1, 0),
             new Attack("Howl", 1, 0.5, 10, "", true),
@@ -306,7 +306,7 @@ function Service(cont) {
     function enemyDied() {
         isPaused = true;
         controller.toggleInputButtons(false);
-        hero.currentExp += Math.floor(currentEnemy.stats.maxHp * currentEnemy.stats.atk * currentEnemy.stats.spd / 40);
+        hero.currentExp += Math.floor(currentEnemy.stats.maxHp * currentEnemy.stats.atk * currentEnemy.stats.spd / 20);
         checkHeroLevel();
 
         currentEnemy.stats.currentHp = currentEnemy.stats.maxHp;
