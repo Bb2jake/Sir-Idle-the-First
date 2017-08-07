@@ -325,7 +325,7 @@ function Service(cont) {
         if (enemyNum >= enemies.length - 1) {
             let zoneNum = zones.indexOf(currentZone);
             // Switch to new zone, or fight boss if last zone
-            if (currentZone >= zones.length - 1) {
+            if (zoneNum >= zones.length - 1) {
                 currentEnemy = boss;
             } else {
                 currentZone = zones[zoneNum + 1];
