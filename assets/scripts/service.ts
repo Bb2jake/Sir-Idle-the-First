@@ -5,10 +5,10 @@ class Service {
     private currentEnemy: Combatant;
     private enemies: Combatant[];
     private currentZone: Zone;
+    private self = this;
 
     constructor(cont) {
         this.controller = cont;
-        console.log(cont);
     }
 
     private zones = [
@@ -270,35 +270,32 @@ class Service {
 
         currentEnemy.stats.currentHp = currentEnemy.stats.maxHp;
 
-        this.controller.fadeOutEnemy(this.selectNextEnemy);
+        this.controller.fadeOutEnemy(this.selectNextEnemy.bind(this));
     }
 
     private selectNextEnemy() {
-        let currentEnemy = this.currentEnemy;
-
-        if (currentEnemy == this.boss) {
+        if (this.currentEnemy == this.boss) {
             // TODO: Game ends here;
             alert("You beat the game!");
             return;
         }
 
-        let enemyNum = this.enemies.indexOf(currentEnemy);
-
+        let enemyNum = this.enemies.indexOf(this.currentEnemy);
         if (enemyNum >= this.enemies.length - 1) {
             let zoneNum = this.zones.indexOf(this.currentZone);
             // Switch to new zone, or fight boss if last zone
             if (zoneNum >= this.zones.length - 1) {
-                currentEnemy = this.boss;
+                this.currentEnemy = this.boss;
             } else {
                 this.currentZone = this.zones[zoneNum + 1];
                 this.initEnemies();
-                currentEnemy = this.enemies[0];
+                this.currentEnemy = this.enemies[0];
             }
         } else {
-            currentEnemy = this.enemies[enemyNum + 1];
+            this.currentEnemy = this.enemies[enemyNum + 1];
         }
 
-        this.controller.fadeInEnemy(this.newEnemySpawned);
+        this.controller.fadeInEnemy(this.newEnemySpawned.bind(this));
     }
 
     private selectPrevEnemy() {

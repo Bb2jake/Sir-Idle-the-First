@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 var Service = (function () {
     function Service(cont) {
         this.isPaused = true;
+        this.self = this;
         this.zones = [
             new Zone("Prairie", 1, "assets/art/prairieBG.png"),
             new Zone("Prairie", 1.5, "assets/art/forestBG.png"),
@@ -22,7 +23,6 @@ var Service = (function () {
             new Attack("Plague Breath", 3, 2, 15, "")
         ], "assets/art/prairieKing.png");
         this.controller = cont;
-        console.log(cont);
     }
     Service.prototype.getIsPaused = function () {
         return this.isPaused;
@@ -214,32 +214,31 @@ var Service = (function () {
         this.hero.currentExp += Math.floor(currentEnemy.stats.maxHp * currentEnemy.stats.atk * currentEnemy.stats.spd / 20);
         this.checkHeroLevel();
         currentEnemy.stats.currentHp = currentEnemy.stats.maxHp;
-        this.controller.fadeOutEnemy(this.selectNextEnemy);
+        this.controller.fadeOutEnemy(this.selectNextEnemy.bind(this));
     };
     Service.prototype.selectNextEnemy = function () {
-        var currentEnemy = this.currentEnemy;
-        if (currentEnemy == this.boss) {
+        if (this.currentEnemy == this.boss) {
             // TODO: Game ends here;
             alert("You beat the game!");
             return;
         }
-        var enemyNum = this.enemies.indexOf(currentEnemy);
+        var enemyNum = this.enemies.indexOf(this.currentEnemy);
         if (enemyNum >= this.enemies.length - 1) {
             var zoneNum = this.zones.indexOf(this.currentZone);
             // Switch to new zone, or fight boss if last zone
             if (zoneNum >= this.zones.length - 1) {
-                currentEnemy = this.boss;
+                this.currentEnemy = this.boss;
             }
             else {
                 this.currentZone = this.zones[zoneNum + 1];
                 this.initEnemies();
-                currentEnemy = this.enemies[0];
+                this.currentEnemy = this.enemies[0];
             }
         }
         else {
-            currentEnemy = this.enemies[enemyNum + 1];
+            this.currentEnemy = this.enemies[enemyNum + 1];
         }
-        this.controller.fadeInEnemy(this.newEnemySpawned);
+        this.controller.fadeInEnemy(this.newEnemySpawned.bind(this));
     };
     Service.prototype.selectPrevEnemy = function () {
         var currentEnemy = this.currentEnemy;
