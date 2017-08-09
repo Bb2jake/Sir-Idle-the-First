@@ -1,43 +1,45 @@
-function Controller() {
-    var service = new Service(this);
-    var self = this;
-
-    function start() {
-        service.start();
-        showEnemySprite();
-        initHeroStatusBar();
-        showEnemyStatusBar();
-        showZone();
+class Controller {
+    private service = new Service(this);
+    constructor() {
+        this.start();
     }
 
-    function showZone() {
-        document.getElementById("background").style.backgroundImage = `url(${service.getZoneImg()})`;
+    private start() {
+        this.service.start();
+        this.showEnemySprite();
+        this.initHeroStatusBar();
+        this.showEnemyStatusBar();
+        this.showZone();
     }
 
-    function showEnemySprite() {
-        let currentEnemy = service.getCurrentEnemy();
+    private showZone() {
+        document.getElementById("background").style.backgroundImage = `url(${this.service.getZoneImg()})`;
+    }
+
+    private showEnemySprite() {
+        let currentEnemy = this.service.getCurrentEnemy();
         document.getElementById("enemy1Img").setAttribute("src", currentEnemy.image);
     }
 
-    function initHeroStatusBar() {
-        let hero = service.getHero();
+    private initHeroStatusBar() {
+        let hero = this.service.getHero();
         let attacks = document.getElementById("attack-buttons").children;
         for (let i = 0; i < attacks.length; i++) {
-            attacks[i].innerText = hero.attacks[i].name;
+            attacks[i].innerHTML = hero.attacks[i].name;
         }
-        showHeroExp();
-        self.showHeroStats();
-        showPotionQuantities();
+        this.showHeroExp();
+        this.showHeroStats();
+        this.showPotionQuantities();
     }
 
-    this.showHeroStats = function () {
-        self.showHeroHp();
-        showHeroAtk();
-        showHeroSpd();
+    public showHeroStats() {
+        this.showHeroHp();
+        this.showHeroAtk();
+        this.showHeroSpd();
     }
 
-    function showPotionQuantities() {
-        let hero = service.getHero();
+    private showPotionQuantities() {
+        let hero = this.service.getHero();
         let i = 0;
         for (let potion in hero.potions) {
             let pot = hero.potions[potion];
@@ -46,85 +48,84 @@ function Controller() {
         }
     }
 
-    this.showHeroHp = function () {
-        let hero = service.getHero();
+    public showHeroHp() {
+        let hero = this.service.getHero();
         document.getElementById("heroHp").innerHTML = `${hero.stats.currentHp}/${hero.stats.maxHp}`;
     }
 
-    function showHeroExp() {
-        let hero = service.getHero();
+    private showHeroExp() {
+        let hero = this.service.getHero();
         document.getElementById("heroLv").innerHTML = `Lv: ${hero.level} | Exp: ${hero.currentExp}/${hero.expToLevel}`;
     }
 
-    function showHeroAtk() {
-        document.getElementById("heroAtk").innerHTML = service.getHeroAtk();
+    private showHeroAtk() {
+        document.getElementById("heroAtk").innerHTML = this.service.getHeroAtk().toString();
     }
 
-    function showHeroSpd() {
-        document.getElementById("heroSpd").innerHTML = (service.getHeroSpd() * 100).toFixed(0);
+    private showHeroSpd() {
+        document.getElementById("heroSpd").innerHTML = (this.service.getHeroSpd() * 100).toFixed(0);
     }
 
-    function showEnemyStatusBar() {
-        let currentEnemy = service.getCurrentEnemy();
+    private showEnemyStatusBar() {
+        let currentEnemy = this.service.getCurrentEnemy();
 
         document.getElementById("enemy-name").innerHTML = `Name: ${currentEnemy.name}`;
         document.getElementById("enemy-atk").innerHTML = `ATK: ${currentEnemy.stats.atk}`;
         document.getElementById("enemy-spd").innerHTML = `SPD: ${currentEnemy.stats.spd}`;
-        showEnemyHp();
+        this.showEnemyHp();
     }
 
-    this.hardReset = function () {
+    public hardReset() {
+        // TODO: Change this to an in-game popup, rather than confirm
         if (confirm("Are you sure you want to start all over?"))
-            start();
+            this.start();
     }
 
-    this.selectHeroAttack = function (atkNum) {
-        service.selectHeroAttack(atkNum, heroAttacks);
+    public selectHeroAttack(atkNum: number) {
+        this.service.selectHeroAttack(atkNum);
     }
 
-    function heroAttacks() {
-        showEnemyHp();
+    private heroAttacks() {
+        this.showEnemyHp();
 
-        let currentEnemy = service.getCurrentEnemy();
+        let currentEnemy = this.service.getCurrentEnemy();
 
         if (currentEnemy.stats.currentHp <= 0) {
-            $("#enemy1Img").addClass("fadeOut").one("animationend", function () {
-                showEnemyStatusBar();
-                showEnemySprite();
-                showHeroExp();
-                self.showHeroHp();
-                showZone();
+            $("#enemy1Img").addClass("fadeOut").one("animationend", () => {
+                this.showEnemyStatusBar();
+                this.showEnemySprite();
+                this.showHeroExp();
+                this.showHeroHp();
+                this.showZone();
                 $("#enemy1Img").removeClass("fadeOut");
             })
-        } else {
-            enemyAttack();
         }
     }
 
-    this.showEnemy = function () {
-        showEnemyStatusBar();
-        showEnemySprite();
-        showZone();
+    public showEnemy() {
+        this.showEnemyStatusBar();
+        this.showEnemySprite();
+        this.showZone();
     }
 
-    this.fadeOutEnemy = function (callback) {
+    public fadeOutEnemy(callback: Function) {
         document.getElementById("enemy-defeated-overlay").style.display = "block";
         $("#enemy-defeated-overlay").addClass("fadeOut").one("animationend", () => {
             $("#enemy-defeated-overlay").removeClass("fadeOut");
         })
 
         $("#enemy1Img").addClass("fadeOut").one("animationend", () => {
-            showHeroExp();
+            this.showHeroExp();
             $("#enemy1Img").removeClass("fadeOut");
             document.getElementById("enemy-defeated-overlay").style.display = "none";
             callback();
         })
     }
 
-    this.fadeInEnemy = function (callback) {
-        showEnemySprite();
-        showEnemyStatusBar();
-        showZone();
+    public fadeInEnemy(callback: Function) {
+        this.showEnemySprite();
+        this.showEnemyStatusBar();
+        this.showZone();
 
         $("#enemy1Img").addClass("fadeIn").one("animationend", function () {
             $("#enemy1Img").removeClass("fadeIn");
@@ -132,26 +133,18 @@ function Controller() {
         })
     }
 
-    this.showEnemyHp = function () {
-        showEnemyHp();
-    }
-
-    function showEnemyHp() {
-        let currentEnemy = service.getCurrentEnemy();
+    public showEnemyHp() {
+        let currentEnemy = this.service.getCurrentEnemy();
         document.getElementById("enemy-hp").innerText = `HP: ${currentEnemy.stats.currentHp}/${currentEnemy.stats.maxHp}`;
     }
 
-    this.usePotion = function (potionNum) {
-        if (service.tryUsePotion(potionNum)) {
-            showPotionQuantities();
+    public usePotion(potionNum: number) {
+        if (this.service.tryUsePotion(potionNum)) {
+            this.showPotionQuantities();
         }
     }
 
-    this.toggleInputButtons = function (toggleOn) {
-        toggleInputButtons(toggleOn);
-    }
-
-    function toggleInputButtons(toggleOn) {
+    public toggleInputButtons(toggleOn: boolean) {
         let atkBtns = document.getElementById("attack-buttons").children;
         let potBtns = document.getElementById("potion-buttons").children;
 
@@ -167,42 +160,38 @@ function Controller() {
                 pot.classList.add("waiting");
             }
 
-            showAttacksAndPotions();
+            this.showAttacksAndPotions();
         }
 
         if (toggleOn)
             document.getElementById("heroAttackName").innerText = "Choose an attack or potion to use";
     }
 
-    this.showHeroAttackName = function (name) {
+    public showHeroAttackName(name: string) {
         document.getElementById("heroAttackName").innerText = name;
     }
 
-    function showHeroDefeatedOverlay(display) {
+    public showHeroDefeatedOverlay(display: boolean) {
         document.getElementById("hero-defeated-overlay").style.display = display ? "block" : "none";
         document.getElementById("revive-hero-btn").style.display = display ? "block" : "none";
         document.getElementById("heroAttackName").style.display = !display ? "block" : "none";
     }
 
-    this.showHeroDefeatedOverlay = function (display) {
-        showHeroDefeatedOverlay(display);
+    public reviveHero() {
+        this.showHeroDefeatedOverlay(false);
+        this.service.reviveHero();
+        this.showHeroHp();
+        this.showEnemyHp();
+        this.toggleInputButtons(true);
     }
 
-    this.reviveHero = function () {
-        showHeroDefeatedOverlay(false);
-        service.reviveHero();
-        self.showHeroHp();
-        showEnemyHp();
-        toggleInputButtons(true);
-    }
-
-    this.showEnemyAttackName = function (name) {
+    public showEnemyAttackName(name: string) {
         document.getElementById("enemyAttackName").innerText = name;
     }
 
     // TODO: Have this accept an attack num for efficiency
-    this.showAttackCooldowns = function () {
-        let attacks = service.getHero().attacks
+    public showAttackCooldowns() {
+        let attacks = this.service.getHero().attacks
         for (let i = 0; i < attacks.length; i++) {
             let attack = attacks[i];
             let atkElem = document.getElementById(`heroAtk${i}`);
@@ -216,8 +205,8 @@ function Controller() {
         }
     }
 
-    this.showPotionActiveTimes = function() {
-        let potions = service.getHero().potions;
+    public showPotionActiveTimes() {
+        let potions = this.service.getHero().potions;
         for (let i = 0; i < potions.length; i++) {
             let potion = potions[i];
             let potElem = document.getElementById(`potion${i}`);
@@ -233,8 +222,8 @@ function Controller() {
         }
     }
 
-    function showAttacksAndPotions() {
-        let hero = service.getHero();
+    private showAttacksAndPotions() {
+        let hero = this.service.getHero();
         let attacks = hero.attacks;
         let potions = hero.potions;
 
@@ -246,7 +235,7 @@ function Controller() {
                 atkElem.setAttribute("disabled", "disabled");
             else
                 atkElem.removeAttribute("disabled");
-            atkElem.style.opacity = disabled ? 0.5 : 1;
+            atkElem.style.opacity = disabled ? '0.5' : '1';
         }
 
         for (var i = 0; i < potions.length; i++) {
@@ -258,14 +247,12 @@ function Controller() {
             else
                 potElem.removeAttribute("disabled");
 
-            potElem.style.opacity = disabled ? 0.5 : 1;
+            potElem.style.opacity = disabled ? '0.5' : '1';
         }
     }
 
-    this.scaleAttackGauges = function () {
-        document.getElementById("heroAttackGauge").style.width = service.getHeroAttackScale() + "%";
-        document.getElementById("enemyAttackGauge").style.width = service.getEnemyAttackScale() + "%";
+    public scaleAttackGauges() {
+        document.getElementById("heroAttackGauge").style.width = this.service.getHeroAttackScale() + "%";
+        document.getElementById("enemyAttackGauge").style.width = this.service.getEnemyAttackScale() + "%";
     }
-
-    start();
 }
