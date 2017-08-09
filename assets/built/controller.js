@@ -1,6 +1,7 @@
 var Controller = (function () {
     function Controller() {
         this.service = new Service(this);
+        console.log(this);
         this.start();
     }
     Controller.prototype.start = function () {

@@ -330,6 +330,7 @@ var Service = (function () {
         this.controller.showPotionActiveTimes();
     };
     Service.prototype.tick = function () {
+        var _this = this;
         if (!this.isPaused) {
             if (!this.hero.chosenAttack && !this.hero.chosenPotion) {
                 this.isPaused = true;
@@ -341,7 +342,9 @@ var Service = (function () {
             this.updateAttacks();
             this.updatePotions();
         }
-        setTimeout(this.tick, 1000 / 30); // 30 FPS
+        setTimeout(function () {
+            _this.tick();
+        }, 1000 / 30); // 30 FPS
     };
     return Service;
 }());

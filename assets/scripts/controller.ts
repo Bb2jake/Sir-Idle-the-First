@@ -1,6 +1,8 @@
 class Controller {
     private service = new Service(this);
+    
     constructor() {
+        console.log(this);
         this.start();
     }
 

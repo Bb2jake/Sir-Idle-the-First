@@ -1,15 +1,15 @@
 class Service {
-    constructor(cont: Controller) {
-        this.controller = cont;
-        console.log(cont);
-    }
-
-    private controller: Controller;
+    private controller;
     private isPaused = true;
     private hero: Hero;
     private currentEnemy: Combatant;
     private enemies: Combatant[];
     private currentZone: Zone;
+
+    constructor(cont) {
+        this.controller = cont;
+        console.log(cont);
+    }
 
     private zones = [
         new Zone("Prairie", 1, "assets/art/prairieBG.png"),
@@ -418,7 +418,9 @@ class Service {
             this.updatePotions();
         }
 
-        setTimeout(this.tick, 1000 / 30); // 30 FPS
+        setTimeout(() => {
+            this.tick();
+        }, 1000 / 30); // 30 FPS
     }
 }
 
