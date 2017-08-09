@@ -1,0 +1,24 @@
+{
+  "name": "slapgame",
+  "version": "1.0.0",
+  "description": "\"# Sir-Idle-the-First\"",
+  "main": "index.js",
+  "dependencies": {
+    "@types/jquery": "^3.2.11",
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bb2jake/SlapGame.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bb2jake/SlapGame/issues"
+  },
+  "homepage": "https://github.com/Bb2jake/SlapGame#readme"
+}
