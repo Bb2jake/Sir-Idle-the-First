@@ -299,20 +299,19 @@ class Service {
     }
 
     private selectPrevEnemy() {
-        let currentEnemy = this.currentEnemy;
         let enemies = this.enemies;
 
-        if (currentEnemy == this.boss) {
-            currentEnemy = enemies[enemies.length - 1];
+        if (this.currentEnemy == this.boss) {
+            this.currentEnemy = enemies[enemies.length - 1];
         } else {
-            let enemyNum = enemies.indexOf(currentEnemy);
+            let enemyNum = enemies.indexOf(this.currentEnemy);
             if (enemyNum > 0) {
-                currentEnemy = enemies[enemyNum - 1];
+                this.currentEnemy = enemies[enemyNum - 1];
             } else {
                 let zoneNum = this.zones.indexOf(this.currentZone);
                 if (zoneNum > 0) {
                     this.currentZone = this.zones[zoneNum - 1];
-                    currentEnemy = enemies[enemies.length - 1];
+                    this.currentEnemy = enemies[enemies.length - 1];
                 }
             }
         }
