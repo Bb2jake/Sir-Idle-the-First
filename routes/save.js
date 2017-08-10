@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
+	currentHp: { type: Number, required: true },
 	level: { type: Number, required: true },
 	exp: { type: Number, required: true },
 	potionQtys: { type: Array, required: true },
@@ -25,8 +26,8 @@ router.post('/', (req, res, next) => {
 		.catch(next);
 })
 
-router.put('/:id', (req, res, next) => {
-	Save.findByIdAndUpdate(id, req.body)
+router.put('/', (req, res, next) => {
+	Save.update({ upsert: true }, req.body)
 		.then(save => {
 			getSaveData(req, res, next);
 		})
@@ -41,9 +42,9 @@ function getSaveData(req, res, next) {
 		.catch(next);
 }
 
-router.use(DefaultErrorHandler);
+router.use(defaultErrorHandler);
 
-function DefaultErrorHandler(err, req, res, next) {
+function defaultErrorHandler(err, req, res, next) {
 	res.json({ success: false, error: err.message });
 }
 

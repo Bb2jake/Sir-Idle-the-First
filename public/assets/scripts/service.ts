@@ -411,6 +411,7 @@ class Service {
 		});
 
 		let data = {
+			currentHp: this.hero.stats.currentHp,
 			level: this.hero.level,
 			exp: this.hero.currentExp,
 			potionQtys: potionQtys,
@@ -420,20 +421,20 @@ class Service {
 		}
 
 		// if (this.saveId) {
-		// 	$.ajax({
-		// 		url: '//localhost:3000/save?' + this.saveId,
-		// 		type: 'PUT',
-		// 		success: (res) => {
-		// 			console.log(res);
-		// 		}
-		// 	})
+			$.ajax({
+				url: '//localhost:3000/save?' + this.saveId,
+				type: 'PUT',
+				success: (res) => {
+					console.log(res);
+				}
+			})
 
 		// } else {
-		$.post('//localhost:3000/save/', data).then(res => {
-			if (res._id)
-				this.saveId = res._id
-			console.log(res);
-		})
+		// $.post('//localhost:3000/save/', data).then(res => {
+		// 	if (res._id)
+		// 		this.saveId = res._id
+		// 	console.log(res);
+		// })
 		// }
 	}
 

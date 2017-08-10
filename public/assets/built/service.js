@@ -329,7 +329,6 @@ var Service = (function () {
         this.controller.showPotionActiveTimes();
     };
     Service.prototype.saveData = function () {
-        var _this = this;
         var potionQtys = [];
         var potionTimeRemaining = [];
         this.hero.potions.forEach(function (potion) {
@@ -344,22 +343,21 @@ var Service = (function () {
             zoneNum: this.zones.indexOf(this.currentZone),
             enemyNum: this.enemies.indexOf(this.currentEnemy)
         };
-        if (this.saveId) {
-            $.ajax({
-                url: '//localhost:3000/save?' + this.saveId,
-                type: 'PUT',
-                success: function (res) {
-                    console.log(res);
-                }
-            });
-        }
-        else {
-            $.post('//localhost:3000/save/', data).then(function (res) {
-                if (res._id)
-                    _this.saveId = res._id;
+        // if (this.saveId) {
+        $.ajax({
+            url: '//localhost:3000/save?' + this.saveId,
+            type: 'PUT',
+            success: function (res) {
                 console.log(res);
-            });
-        }
+            }
+        });
+        // } else {
+        // $.post('//localhost:3000/save/', data).then(res => {
+        // 	if (res._id)
+        // 		this.saveId = res._id
+        // 	console.log(res);
+        // })
+        // }
     };
     Service.prototype.tick = function () {
         var _this = this;
