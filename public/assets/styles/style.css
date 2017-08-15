@@ -167,6 +167,14 @@ body {
   bottom: 100px;
 }
 
+#dev-tools {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  transform: translateX(-50%);
+}
+
 @media (max-width: 900px) {
   html * {
     font-size: 12px;

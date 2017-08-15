@@ -6,7 +6,6 @@ class Service {
 	private currentEnemy: Combatant;
 	private enemies: Combatant[];
 	private currentZone: Zone;
-	private self = this;
 
 	constructor(cont) {
 		this.controller = cont;
@@ -59,7 +58,7 @@ class Service {
 
 	private checkHeroLevel() {
 		let hero = this.hero;
-		while (hero.currentExp > hero.expToLevel) {
+		while (hero.currentExp >= hero.expToLevel) {
 			hero.level++;
 			hero.stats.maxHp = Math.floor(hero.stats.maxHp * 1.1);
 			hero.stats.currentHp = hero.stats.maxHp;
@@ -455,6 +454,16 @@ class Service {
 			this.tick();
 		}, 1000 / 30); // 30 FPS
 	}
+
+	// Dev tools only
+	public levelUpHero() {
+		this.hero.currentExp = this.hero.expToLevel;
+		this.checkHeroLevel();
+	}
+
+	public nextEnemy() {
+		this.selectNextEnemy();
+	}
 }
 
 class Stats {
@@ -512,9 +521,9 @@ class Attack {
 
 class Hero extends Combatant {
 	public potions: Potion[];
-	public level: number = 1;
-	public currentExp: number = 0;
-	public expToLevel: number = 10;
+	public level = 1;
+	public currentExp = 0;
+	public expToLevel = 10;
 	public chosenPotion: Potion;
 
 	constructor(name: string, stats: Stats, attacks: Attack[], image: string, potions: Potion[]) {
@@ -533,7 +542,7 @@ class Potion {
 	public image: string;
 	public description: string;
 	public boostTimeRemaining: number;
-	public isActive: boolean = false;
+	public isActive = false;
 
 	constructor(name: string, boostStat: string, boostPercent: number, boostTime: number, castTime: number, quantity: number, image: string, description: string) {
 		this.name = name;

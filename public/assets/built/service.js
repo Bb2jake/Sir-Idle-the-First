@@ -12,7 +12,6 @@ var Service = (function () {
     function Service(cont) {
         this.saveId = 0;
         this.isPaused = true;
-        this.self = this;
         this.zones = [
             new Zone("Prairie", 1, "assets/art/prairieBG.png"),
             new Zone("Prairie", 1.5, "assets/art/forestBG.png"),
@@ -50,7 +49,7 @@ var Service = (function () {
     };
     Service.prototype.checkHeroLevel = function () {
         var hero = this.hero;
-        while (hero.currentExp > hero.expToLevel) {
+        while (hero.currentExp >= hero.expToLevel) {
             hero.level++;
             hero.stats.maxHp = Math.floor(hero.stats.maxHp * 1.1);
             hero.stats.currentHp = hero.stats.maxHp;
@@ -336,6 +335,7 @@ var Service = (function () {
             potionTimeRemaining.push(potion.boostTimeRemaining || 0);
         });
         var data = {
+            currentHp: this.hero.stats.currentHp,
             level: this.hero.level,
             exp: this.hero.currentExp,
             potionQtys: potionQtys,
@@ -375,6 +375,14 @@ var Service = (function () {
         setTimeout(function () {
             _this.tick();
         }, 1000 / 30); // 30 FPS
+    };
+    // Dev tools only
+    Service.prototype.levelUpHero = function () {
+        this.hero.currentExp = this.hero.expToLevel;
+        this.checkHeroLevel();
+    };
+    Service.prototype.nextEnemy = function () {
+        this.selectNextEnemy();
     };
     return Service;
 }());

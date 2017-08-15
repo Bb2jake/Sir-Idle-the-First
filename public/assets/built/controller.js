@@ -9,6 +9,7 @@ var Controller = (function () {
         this.initHeroStatusBar();
         this.showEnemyStatusBar();
         this.showZone();
+        this.listenForDevCode();
     };
     Controller.prototype.showZone = function () {
         document.getElementById("background").style.backgroundImage = "url(" + this.service.getZoneImg() + ")";
@@ -217,6 +218,35 @@ var Controller = (function () {
     Controller.prototype.scaleAttackGauges = function () {
         document.getElementById("heroAttackGauge").style.width = this.service.getHeroAttackScale() + "%";
         document.getElementById("enemyAttackGauge").style.width = this.service.getEnemyAttackScale() + "%";
+    };
+    Controller.prototype.listenForDevCode = function () {
+        var _this = this;
+        var code = "sif";
+        var seq = "";
+        var firstKeyTime;
+        $(document).keydown(function (e) {
+            var milliseconds = new Date().getUTCMilliseconds();
+            if (milliseconds - 1000 > firstKeyTime)
+                seq = "";
+            if (!seq)
+                firstKeyTime = milliseconds;
+            seq += (e.key);
+            if (seq == code) {
+                _this.enableDevTools();
+                $(document).unbind('keydown');
+            }
+        });
+    };
+    Controller.prototype.enableDevTools = function () {
+        $('#dev-tools').show();
+    };
+    Controller.prototype.levelUpHero = function () {
+        this.service.levelUpHero();
+        this.showHeroStats();
+    };
+    Controller.prototype.nextEnemy = function () {
+        this.service.nextEnemy();
+        this.showEnemy();
     };
     return Controller;
 }());

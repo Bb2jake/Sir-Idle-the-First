@@ -8,7 +8,7 @@ server.use(express.static(__dirname + '/public'));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
-var saveRouter = require('./routes/save')
+var saveRouter = require('./routes/save');
 server.use('/save', saveRouter);
 
 server.listen(port, () => {
@@ -17,4 +17,4 @@ server.listen(port, () => {
     Available on:
     http://127.0.0.1:${port}
     Hit CTRL-C to stop the server`);
-})
+});
