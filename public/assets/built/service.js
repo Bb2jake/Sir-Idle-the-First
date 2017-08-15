@@ -51,10 +51,10 @@ var Service = (function () {
         var hero = this.hero;
         while (hero.currentExp >= hero.expToLevel) {
             hero.level++;
-            hero.stats.maxHp = Math.floor(hero.stats.maxHp * 1.1);
+            hero.stats.maxHp = 100 + (hero.level - 1) * 10;
             hero.stats.currentHp = hero.stats.maxHp;
-            hero.stats.atk = Math.floor(hero.stats.atk * 1.1);
-            hero.stats.spd = +((hero.stats.spd * 1.1).toFixed(2));
+            hero.stats.atk = 10 + (hero.level - 1) * 2;
+            hero.stats.spd = +(0.5 + (hero.level - 1) * 0.05).toFixed(2);
             hero.currentExp -= hero.expToLevel;
             hero.expToLevel = hero.level * 10;
         }
@@ -361,19 +361,19 @@ var Service = (function () {
     };
     Service.prototype.tick = function () {
         var _this = this;
-        if (!this.isPaused) {
-            if (!this.hero.chosenAttack && !this.hero.chosenPotion) {
-                this.isPaused = true;
-                this.controller.toggleInputButtons(true);
+        clearInterval(this.tickInterval);
+        this.tickInterval = setInterval(function () {
+            if (!_this.isPaused) {
+                if (!_this.hero.chosenAttack && !_this.hero.chosenPotion) {
+                    _this.isPaused = true;
+                    _this.controller.toggleInputButtons(true);
+                }
+                else {
+                    _this.scaleAttackGauges();
+                }
+                _this.updateAttacks();
+                _this.updatePotions();
             }
-            else {
-                this.scaleAttackGauges();
-            }
-            this.updateAttacks();
-            this.updatePotions();
-        }
-        setTimeout(function () {
-            _this.tick();
         }, 1000 / 30); // 30 FPS
     };
     // Dev tools only

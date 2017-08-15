@@ -2,6 +2,7 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css");
 // *
 $standardBG : url("../art/standardBG.png");
+$text-black-outline: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 
 body
     overflow: hidden;
@@ -104,6 +105,10 @@ body
 #heroAttackBarContainer
     float: left;
     margin: 18% 0 0 5%;
+
+#heroAttackName, #enemyAttackName
+	color: white;
+	text-shadow: $text-black-outline;
 
 #enemyAttackBarContainer
     float: right;

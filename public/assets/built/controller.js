@@ -2,6 +2,7 @@ var Controller = (function () {
     function Controller() {
         this.service = new Service(this);
         this.start();
+        this.listenForDevCode();
     }
     Controller.prototype.start = function () {
         this.service.start();
@@ -9,7 +10,6 @@ var Controller = (function () {
         this.initHeroStatusBar();
         this.showEnemyStatusBar();
         this.showZone();
-        this.listenForDevCode();
     };
     Controller.prototype.showZone = function () {
         document.getElementById("background").style.backgroundImage = "url(" + this.service.getZoneImg() + ")";
@@ -60,13 +60,17 @@ var Controller = (function () {
         var currentEnemy = this.service.getCurrentEnemy();
         document.getElementById("enemy-name").innerHTML = "Name: " + currentEnemy.name;
         document.getElementById("enemy-atk").innerHTML = "ATK: " + currentEnemy.stats.atk;
-        document.getElementById("enemy-spd").innerHTML = "SPD: " + currentEnemy.stats.spd;
+        document.getElementById("enemy-spd").innerHTML = "SPD: " + (currentEnemy.stats.spd * 100).toFixed(0);
         this.showEnemyHp();
     };
     Controller.prototype.hardReset = function () {
         // TODO: Change this to an in-game popup, rather than confirm
-        if (confirm("Are you sure you want to start all over?"))
+        if (confirm("Are you sure you want to start all over?")) {
             this.start();
+            this.showPotionActiveTimes();
+            this.showAttackCooldowns();
+            this.toggleInputButtons(true);
+        }
     };
     Controller.prototype.selectHeroAttack = function (atkNum) {
         this.service.selectHeroAttack(atkNum);

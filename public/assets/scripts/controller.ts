@@ -3,6 +3,7 @@ class Controller {
 
 	constructor() {
 		this.start();
+		this.listenForDevCode();
 	}
 
 	private start() {
@@ -11,7 +12,6 @@ class Controller {
 		this.initHeroStatusBar();
 		this.showEnemyStatusBar();
 		this.showZone();
-		this.listenForDevCode();
 	}
 
 	private showZone() {
@@ -73,14 +73,18 @@ class Controller {
 
 		document.getElementById("enemy-name").innerHTML = `Name: ${currentEnemy.name}`;
 		document.getElementById("enemy-atk").innerHTML = `ATK: ${currentEnemy.stats.atk}`;
-		document.getElementById("enemy-spd").innerHTML = `SPD: ${currentEnemy.stats.spd}`;
+		document.getElementById("enemy-spd").innerHTML = `SPD: ${(currentEnemy.stats.spd * 100).toFixed(0)}`;
 		this.showEnemyHp();
 	}
 
 	public hardReset() {
 		// TODO: Change this to an in-game popup, rather than confirm
-		if (confirm("Are you sure you want to start all over?"))
+		if (confirm("Are you sure you want to start all over?")) {
 			this.start();
+			this.showPotionActiveTimes();
+			this.showAttackCooldowns();
+			this.toggleInputButtons(true);
+		}
 	}
 
 	public selectHeroAttack(atkNum: number) {
