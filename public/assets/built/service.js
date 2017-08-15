@@ -188,6 +188,7 @@ var Service = (function () {
         }
         this.controller.showEnemyHp();
     };
+    // Plus or minus 10% damage
     Service.prototype.randomizeDamage = function (damage) {
         var plusMinus = Math.floor(Math.random() * 2);
         var damagePercent = Math.random() / 10;

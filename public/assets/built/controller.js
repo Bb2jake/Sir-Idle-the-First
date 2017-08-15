@@ -16,7 +16,7 @@ var Controller = (function () {
     };
     Controller.prototype.showEnemySprite = function () {
         var currentEnemy = this.service.getCurrentEnemy();
-        document.getElementById("enemy1Img").setAttribute("src", currentEnemy.image);
+        document.getElementById("enemy1-img").setAttribute("src", currentEnemy.image);
     };
     Controller.prototype.initHeroStatusBar = function () {
         var hero = this.service.getHero();
@@ -38,23 +38,23 @@ var Controller = (function () {
         var i = 0;
         for (var potion in hero.potions) {
             var pot = hero.potions[potion];
-            document.getElementById("potion" + i + "Qty").innerHTML = pot.quantity + "x ";
+            document.getElementById("potion" + i + "-qty").innerHTML = pot.quantity + "x ";
             i++;
         }
     };
     Controller.prototype.showHeroHp = function () {
         var hero = this.service.getHero();
-        document.getElementById("heroHp").innerHTML = hero.stats.currentHp + "/" + hero.stats.maxHp;
+        document.getElementById("hero-hp").innerHTML = hero.stats.currentHp + "/" + hero.stats.maxHp;
     };
     Controller.prototype.showHeroExp = function () {
         var hero = this.service.getHero();
-        document.getElementById("heroLv").innerHTML = "Lv: " + hero.level + " | Exp: " + hero.currentExp + "/" + hero.expToLevel;
+        document.getElementById("hero-lv").innerHTML = "Lv: " + hero.level + " | Exp: " + hero.currentExp + "/" + hero.expToLevel;
     };
     Controller.prototype.showHeroAtk = function () {
-        document.getElementById("heroAtk").innerHTML = this.service.getHeroAtk().toString();
+        document.getElementById("hero-atk").innerHTML = this.service.getHeroAtk().toString();
     };
     Controller.prototype.showHeroSpd = function () {
-        document.getElementById("heroSpd").innerHTML = (this.service.getHeroSpd() * 100).toFixed(0);
+        document.getElementById("hero-spd").innerHTML = (this.service.getHeroSpd() * 100).toFixed(0);
     };
     Controller.prototype.showEnemyStatusBar = function () {
         var currentEnemy = this.service.getCurrentEnemy();
@@ -80,13 +80,13 @@ var Controller = (function () {
         this.showEnemyHp();
         var currentEnemy = this.service.getCurrentEnemy();
         if (currentEnemy.stats.currentHp <= 0) {
-            $("#enemy1Img").addClass("fadeOut").one("animationend", function () {
+            $("#enemy1-img").addClass("fadeOut").one("animationend", function () {
                 _this.showEnemyStatusBar();
                 _this.showEnemySprite();
                 _this.showHeroExp();
                 _this.showHeroHp();
                 _this.showZone();
-                $("#enemy1Img").removeClass("fadeOut");
+                $("#enemy1-img").removeClass("fadeOut");
             });
         }
     };
@@ -101,9 +101,9 @@ var Controller = (function () {
         $("#enemy-defeated-overlay").addClass("fadeOut").one("animationend", function () {
             $("#enemy-defeated-overlay").removeClass("fadeOut");
         });
-        $("#enemy1Img").addClass("fadeOut").one("animationend", function () {
+        $("#enemy1-img").addClass("fadeOut").one("animationend", function () {
             _this.showHeroExp();
-            $("#enemy1Img").removeClass("fadeOut");
+            $("#enemy1-img").removeClass("fadeOut");
             document.getElementById("enemy-defeated-overlay").style.display = "none";
             callback();
         });
@@ -112,8 +112,8 @@ var Controller = (function () {
         this.showEnemySprite();
         this.showEnemyStatusBar();
         this.showZone();
-        $("#enemy1Img").addClass("fadeIn").one("animationend", function () {
-            $("#enemy1Img").removeClass("fadeIn");
+        $("#enemy1-img").addClass("fadeIn").one("animationend", function () {
+            $("#enemy1-img").removeClass("fadeIn");
             callback();
         });
     };
@@ -143,15 +143,15 @@ var Controller = (function () {
             this.showAttacksAndPotions();
         }
         if (toggleOn)
-            document.getElementById("heroAttackName").innerText = "Choose an attack or potion to use";
+            document.getElementById("hero-attack-name").innerText = "Choose an attack or potion to use";
     };
     Controller.prototype.showHeroAttackName = function (name) {
-        document.getElementById("heroAttackName").innerText = name;
+        document.getElementById("hero-attack-name").innerText = name;
     };
     Controller.prototype.showHeroDefeatedOverlay = function (display) {
         document.getElementById("hero-defeated-overlay").style.display = display ? "block" : "none";
         document.getElementById("revive-hero-btn").style.display = display ? "block" : "none";
-        document.getElementById("heroAttackName").style.display = !display ? "block" : "none";
+        document.getElementById("hero-attack-name").style.display = !display ? "block" : "none";
     };
     Controller.prototype.reviveHero = function () {
         this.showHeroDefeatedOverlay(false);
@@ -161,21 +161,21 @@ var Controller = (function () {
         this.toggleInputButtons(true);
     };
     Controller.prototype.showEnemyAttackName = function (name) {
-        document.getElementById("enemyAttackName").innerText = name;
+        document.getElementById("enemy-attack-name").innerText = name;
     };
     // TODO: Have this accept an attack num for efficiency
     Controller.prototype.showAttackCooldowns = function () {
         var attacks = this.service.getHero().attacks;
         for (var i = 0; i < attacks.length; i++) {
             var attack = attacks[i];
-            var atkElem = document.getElementById("heroAtk" + i);
+            var atkElem = document.getElementById("hero-atk" + i);
             if (attack.cooldownRemaining > 0) {
                 atkElem.innerHTML = Math.ceil(attack.cooldownRemaining) + "s";
-                atkElem.classList.add("onCooldown");
+                atkElem.classList.add("on-cooldown");
             }
             else {
                 atkElem.innerHTML = attack.name;
-                atkElem.classList.remove("onCooldown");
+                atkElem.classList.remove("on-cooldown");
             }
         }
     };
@@ -187,12 +187,12 @@ var Controller = (function () {
             if (potion.boostTimeRemaining > 0) {
                 potElem.children[0].innerHTML = Math.ceil(potion.boostTimeRemaining) + "s";
                 // potElem.children[1].style.display = "none"
-                potElem.classList.add("onCooldown");
+                potElem.classList.add("on-cooldown");
             }
             else {
                 potElem.children[0].innerHTML = potion.quantity + "x ";
                 // potElem.children[1].style.display = "initial";
-                potElem.classList.remove("onCooldown");
+                potElem.classList.remove("on-cooldown");
             }
         }
     };
@@ -201,8 +201,8 @@ var Controller = (function () {
         var attacks = hero.attacks;
         var potions = hero.potions;
         for (var i = 0; i < attacks.length; i++) {
-            var atkElem = document.getElementById("heroAtk" + i);
-            var disabled = (atkElem.classList.contains("onCooldown") || atkElem.classList.contains("waiting"));
+            var atkElem = document.getElementById("hero-atk" + i);
+            var disabled = (atkElem.classList.contains("on-cooldown") || atkElem.classList.contains("waiting"));
             if (disabled)
                 atkElem.setAttribute("disabled", "disabled");
             else
@@ -211,7 +211,7 @@ var Controller = (function () {
         }
         for (var i = 0; i < potions.length; i++) {
             var potElem = document.getElementById("potion" + i);
-            var disabled = (potElem.classList.contains("onCooldown") || potElem.classList.contains("waiting") || potions[i].quantity == 0);
+            var disabled = (potElem.classList.contains("on-cooldown") || potElem.classList.contains("waiting") || potions[i].quantity == 0);
             if (disabled)
                 potElem.setAttribute("disabled", "disabled");
             else
@@ -220,8 +220,8 @@ var Controller = (function () {
         }
     };
     Controller.prototype.scaleAttackGauges = function () {
-        document.getElementById("heroAttackGauge").style.width = this.service.getHeroAttackScale() + "%";
-        document.getElementById("enemyAttackGauge").style.width = this.service.getEnemyAttackScale() + "%";
+        document.getElementById("hero-attack-gauge").style.width = this.service.getHeroAttackScale() + "%";
+        document.getElementById("enemy-attack-gauge").style.width = this.service.getEnemyAttackScale() + "%";
     };
     Controller.prototype.listenForDevCode = function () {
         var _this = this;

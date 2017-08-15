@@ -8,7 +8,7 @@ class Service {
 	private currentZone: Zone;
 	private tickInterval: number;
 
-	constructor(cont) {
+	constructor(cont: Controller) {
 		this.controller = cont;
 	}
 
@@ -239,6 +239,7 @@ class Service {
 		this.controller.showEnemyHp();
 	}
 
+	// Plus or minus 10% damage
 	private randomizeDamage(damage): number {
 		var plusMinus = Math.floor(Math.random() * 2)
 		var damagePercent = Math.random() / 10;

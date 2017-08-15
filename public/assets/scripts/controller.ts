@@ -20,7 +20,7 @@ class Controller {
 
 	private showEnemySprite() {
 		let currentEnemy = this.service.getCurrentEnemy();
-		document.getElementById("enemy1Img").setAttribute("src", currentEnemy.image);
+		document.getElementById("enemy1-img").setAttribute("src", currentEnemy.image);
 	}
 
 	private initHeroStatusBar() {
@@ -45,27 +45,27 @@ class Controller {
 		let i = 0;
 		for (let potion in hero.potions) {
 			let pot = hero.potions[potion];
-			document.getElementById(`potion${i}Qty`).innerHTML = `${pot.quantity}x `;
+			document.getElementById(`potion${i}-qty`).innerHTML = `${pot.quantity}x `;
 			i++;
 		}
 	}
 
 	public showHeroHp() {
 		let hero = this.service.getHero();
-		document.getElementById("heroHp").innerHTML = `${hero.stats.currentHp}/${hero.stats.maxHp}`;
+		document.getElementById("hero-hp").innerHTML = `${hero.stats.currentHp}/${hero.stats.maxHp}`;
 	}
 
 	private showHeroExp() {
 		let hero = this.service.getHero();
-		document.getElementById("heroLv").innerHTML = `Lv: ${hero.level} | Exp: ${hero.currentExp}/${hero.expToLevel}`;
+		document.getElementById("hero-lv").innerHTML = `Lv: ${hero.level} | Exp: ${hero.currentExp}/${hero.expToLevel}`;
 	}
 
 	private showHeroAtk() {
-		document.getElementById("heroAtk").innerHTML = this.service.getHeroAtk().toString();
+		document.getElementById("hero-atk").innerHTML = this.service.getHeroAtk().toString();
 	}
 
 	private showHeroSpd() {
-		document.getElementById("heroSpd").innerHTML = (this.service.getHeroSpd() * 100).toFixed(0);
+		document.getElementById("hero-spd").innerHTML = (this.service.getHeroSpd() * 100).toFixed(0);
 	}
 
 	private showEnemyStatusBar() {
@@ -97,13 +97,13 @@ class Controller {
 		let currentEnemy = this.service.getCurrentEnemy();
 
 		if (currentEnemy.stats.currentHp <= 0) {
-			$("#enemy1Img").addClass("fadeOut").one("animationend", () => {
+			$("#enemy1-img").addClass("fadeOut").one("animationend", () => {
 				this.showEnemyStatusBar();
 				this.showEnemySprite();
 				this.showHeroExp();
 				this.showHeroHp();
 				this.showZone();
-				$("#enemy1Img").removeClass("fadeOut");
+				$("#enemy1-img").removeClass("fadeOut");
 			})
 		}
 	}
@@ -120,9 +120,9 @@ class Controller {
 			$("#enemy-defeated-overlay").removeClass("fadeOut");
 		})
 
-		$("#enemy1Img").addClass("fadeOut").one("animationend", () => {
+		$("#enemy1-img").addClass("fadeOut").one("animationend", () => {
 			this.showHeroExp();
-			$("#enemy1Img").removeClass("fadeOut");
+			$("#enemy1-img").removeClass("fadeOut");
 			document.getElementById("enemy-defeated-overlay").style.display = "none";
 			callback();
 		})
@@ -133,8 +133,8 @@ class Controller {
 		this.showEnemyStatusBar();
 		this.showZone();
 
-		$("#enemy1Img").addClass("fadeIn").one("animationend", function () {
-			$("#enemy1Img").removeClass("fadeIn");
+		$("#enemy1-img").addClass("fadeIn").one("animationend", function () {
+			$("#enemy1-img").removeClass("fadeIn");
 			callback();
 		})
 	}
@@ -170,17 +170,17 @@ class Controller {
 		}
 
 		if (toggleOn)
-			document.getElementById("heroAttackName").innerText = "Choose an attack or potion to use";
+			document.getElementById("hero-attack-name").innerText = "Choose an attack or potion to use";
 	}
 
 	public showHeroAttackName(name: string) {
-		document.getElementById("heroAttackName").innerText = name;
+		document.getElementById("hero-attack-name").innerText = name;
 	}
 
 	public showHeroDefeatedOverlay(display: boolean) {
 		document.getElementById("hero-defeated-overlay").style.display = display ? "block" : "none";
 		document.getElementById("revive-hero-btn").style.display = display ? "block" : "none";
-		document.getElementById("heroAttackName").style.display = !display ? "block" : "none";
+		document.getElementById("hero-attack-name").style.display = !display ? "block" : "none";
 	}
 
 	public reviveHero() {
@@ -192,7 +192,7 @@ class Controller {
 	}
 
 	public showEnemyAttackName(name: string) {
-		document.getElementById("enemyAttackName").innerText = name;
+		document.getElementById("enemy-attack-name").innerText = name;
 	}
 
 	// TODO: Have this accept an attack num for efficiency
@@ -200,13 +200,13 @@ class Controller {
 		let attacks = this.service.getHero().attacks
 		for (let i = 0; i < attacks.length; i++) {
 			let attack = attacks[i];
-			let atkElem = document.getElementById(`heroAtk${i}`);
+			let atkElem = document.getElementById(`hero-atk${i}`);
 			if (attack.cooldownRemaining > 0) {
 				atkElem.innerHTML = Math.ceil(attack.cooldownRemaining) + "s";
-				atkElem.classList.add("onCooldown");
+				atkElem.classList.add("on-cooldown");
 			} else {
 				atkElem.innerHTML = attack.name;
-				atkElem.classList.remove("onCooldown");
+				atkElem.classList.remove("on-cooldown");
 			}
 		}
 	}
@@ -219,11 +219,11 @@ class Controller {
 			if (potion.boostTimeRemaining > 0) {
 				potElem.children[0].innerHTML = Math.ceil(potion.boostTimeRemaining) + "s";
 				// potElem.children[1].style.display = "none"
-				potElem.classList.add("onCooldown");
+				potElem.classList.add("on-cooldown");
 			} else {
 				potElem.children[0].innerHTML = potion.quantity + "x ";
 				// potElem.children[1].style.display = "initial";
-				potElem.classList.remove("onCooldown");
+				potElem.classList.remove("on-cooldown");
 			}
 		}
 	}
@@ -234,9 +234,9 @@ class Controller {
 		let potions = hero.potions;
 
 		for (var i = 0; i < attacks.length; i++) {
-			let atkElem = document.getElementById(`heroAtk${i}`);
+			let atkElem = document.getElementById(`hero-atk${i}`);
 
-			let disabled = (atkElem.classList.contains("onCooldown") || atkElem.classList.contains("waiting"));
+			let disabled = (atkElem.classList.contains("on-cooldown") || atkElem.classList.contains("waiting"));
 			if (disabled)
 				atkElem.setAttribute("disabled", "disabled");
 			else
@@ -247,7 +247,7 @@ class Controller {
 		for (var i = 0; i < potions.length; i++) {
 			let potElem = document.getElementById(`potion${i}`);
 
-			let disabled = (potElem.classList.contains("onCooldown") || potElem.classList.contains("waiting") || potions[i].quantity == 0);
+			let disabled = (potElem.classList.contains("on-cooldown") || potElem.classList.contains("waiting") || potions[i].quantity == 0);
 			if (disabled)
 				potElem.setAttribute("disabled", "disabled");
 			else
@@ -258,8 +258,8 @@ class Controller {
 	}
 
 	public scaleAttackGauges() {
-		document.getElementById("heroAttackGauge").style.width = this.service.getHeroAttackScale() + "%";
-		document.getElementById("enemyAttackGauge").style.width = this.service.getEnemyAttackScale() + "%";
+		document.getElementById("hero-attack-gauge").style.width = this.service.getHeroAttackScale() + "%";
+		document.getElementById("enemy-attack-gauge").style.width = this.service.getEnemyAttackScale() + "%";
 	}
 
 	private listenForDevCode() {

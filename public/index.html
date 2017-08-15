@@ -16,30 +16,30 @@
 				<div id="status-bar" class="row vertical-align">
 					<div id="hero-status-bar-container" class="text-center col-xs-5">
 						<div class="row" id="hero-status-bar">
-							<div id="hero-stats" class="col-xs-6 standardBG">
+							<div id="hero-stats" class="col-xs-6 standard-bg">
 								<h4>Name: Kai</h4>
-								<p>HP: <span id="heroHp" class="standardBG"></span></p>
-								<p id="heroLv"></p>
-								<p>ATK: <span id="heroAtk"></span></p>
-								<p>SPD: <span id="heroSpd"></span></p>
+								<p>HP: <span id="hero-hp" class="standard-bg"></span></p>
+								<p id="hero-lv"></p>
+								<p>ATK: <span id="hero-atk"></span></p>
+								<p>SPD: <span id="hero-spd"></span></p>
 							</div>
-							<div id="attack-buttons" class="col-xs-3 standardBG">
-								<button id="heroAtk0" class="standardBG" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.selectHeroAttack(0)"></button>
-								<button id="heroAtk1" class="standardBG" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.selectHeroAttack(1)"></button>
-								<button id="heroAtk2" class="standardBG" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.selectHeroAttack(2)"></button>
+							<div id="attack-buttons" class="col-xs-3 standard-bg">
+								<button id="hero-atk0" class="standard-bg" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.selectHeroAttack(0)"></button>
+								<button id="hero-atk1" class="standard-bg" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.selectHeroAttack(1)"></button>
+								<button id="hero-atk2" class="standard-bg" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.selectHeroAttack(2)"></button>
 							</div>
-							<div id="potion-buttons" class="col-xs-3 standardBG">
-								<button id="potion0" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.usePotion(0)"><span id="potion0Qty"></span><img src="assets/art/healthPotion.png" alt="potion 0"></button>
-								<button id="potion1" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.usePotion(1)"><span id="potion1Qty"></span><img src="assets/art/attackPotion.png" alt="potion 1"></button>
-								<button id="potion2" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.usePotion(2)"><span id="potion2Qty"></span><img src="assets/art/speedPotion.png" alt="potion 2"></button>
+							<div id="potion-buttons" class="col-xs-3 standard-bg">
+								<button id="potion0" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.usePotion(0)"><span id="potion0-qty"></span><img src="assets/art/healthPotion.png" alt="potion 0"></button>
+								<button id="potion1" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.usePotion(1)"><span id="potion1-qty"></span><img src="assets/art/attackPotion.png" alt="potion 1"></button>
+								<button id="potion2" type="button" onpointerenter="" onpointerleave="" onclick="app.controller.usePotion(2)"><span id="potion2-qty"></span><img src="assets/art/speedPotion.png" alt="potion 2"></button>
 							</div>
 						</div>
 					</div>
 					<div id="hard-reset-btn" class="text-center col-xs-2">
-						<button type="button" class="standardBG" onclick="app.controller.hardReset()">Reset Game</button>
+						<button type="button" class="standard-bg" onclick="app.controller.hardReset()">Reset Game</button>
 					</div>
 					<div id="enemy-status-bar" class="text-center col-xs-5">
-						<div id="enemy-stats" class="standardBG">
+						<div id="enemy-stats" class="standard-bg">
 							<h4 id="enemy-name">Name: </h4>
 							<p id="enemy-hp">HP: </p>
 							<p id="enemy-atk">ATK: </p>
@@ -50,17 +50,17 @@
 			</div>
 			<div id="combatants">
 				<div class="attack-bars">
-					<div id="heroAttackBarContainer" class="attack-bar-container">
-						<h4 id="heroAttackName">Choose an attack or potion to use</h4>
-						<button id="revive-hero-btn" type="button" onclick="app.controller.reviveHero()" class="standardBG">Revive Hero</button>
-						<div id="heroAttackBar" class="standardBG attack-bar text-center">
-							<img src="assets/art/fillGauge.png" id="heroAttackGauge" class="attack-gauge" alt="">
+					<div id="hero-attack-bar-container" class="attack-bar-container">
+						<h4 id="hero-attack-name">Choose an attack or potion to use</h4>
+						<button id="revive-hero-btn" type="button" onclick="app.controller.reviveHero()" class="standard-bg">Revive Hero</button>
+						<div id="hero-attack-bar" class="standard-bg attack-bar text-center">
+							<img src="assets/art/fillGauge.png" id="hero-attack-gauge" class="attack-gauge" alt="">
 						</div>
 					</div>
-					<div id="enemyAttackBarContainer" class="attack-bar-container">
-						<h4 id="enemyAttackName"></h4>
-						<div id="enemyAttackBar" class="standardBG attack-bar text-center">
-							<img src="assets/art/fillGauge.png" id="enemyAttackGauge" class="attack-gauge" alt="">
+					<div id="enemy-attack-bar-container" class="attack-bar-container">
+						<h4 id="enemy-attack-name"></h4>
+						<div id="enemy-attack-bar" class="standard-bg attack-bar text-center">
+							<img src="assets/art/fillGauge.png" id="enemy-attack-gauge" class="attack-gauge" alt="">
 						</div>
 					</div>
 				</div>
@@ -69,7 +69,7 @@
 					<img id="hero-defeated-overlay" class="defeated-overlay animated" src="assets/art/defeatedOverlay.png" alt="defeated overlay">
 				</div>
 				<div id="enemy1" class="enemy">
-					<img id="enemy1Img" src="" alt="enemy image" class="animated">
+					<img id="enemy1-img" src="" alt="enemy image" class="animated">
 					<img id="enemy-defeated-overlay" class="defeated-overlay animated" src="assets/art/defeatedOverlay.png" alt="defeated overlay">
 				</div>
 			</div>
