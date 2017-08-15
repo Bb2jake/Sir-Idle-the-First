@@ -225,7 +225,9 @@ class Service {
 		let hero = this.hero;
 		let currentEnemy = this.currentEnemy;
 
-		currentEnemy.stats.currentHp -= hero.chosenAttack.potency * this.getHeroAtk();
+		var damage = this.randomizeDamage(hero.chosenAttack.potency * this.getHeroAtk());
+
+		currentEnemy.stats.currentHp -= damage;
 		hero.chosenAttack.cooldownRemaining = hero.chosenAttack.cooldown;
 		this.controller.showAttackCooldowns();
 		hero.chosenAttack = null;
@@ -237,11 +239,20 @@ class Service {
 		this.controller.showEnemyHp();
 	}
 
+	private randomizeDamage(damage): number {
+		var plusMinus = Math.floor(Math.random() * 2)
+		var damagePercent = Math.random() / 10;
+		damage = Math.floor(plusMinus ? damage + damage * damagePercent : damage - damage * damagePercent);
+		return damage;
+	}
+
 	private enemyAttack() {
 		let hero = this.hero;
 		let currentEnemy = this.currentEnemy;
 
-		hero.stats.currentHp -= currentEnemy.chosenAttack.potency * currentEnemy.stats.atk;
+		var damage = this.randomizeDamage(currentEnemy.chosenAttack.potency * currentEnemy.stats.atk);
+		
+		hero.stats.currentHp -= damage;
 		currentEnemy.chosenAttack.cooldownRemaining = currentEnemy.chosenAttack.cooldown;
 
 		if (hero.stats.currentHp <= 0) {
