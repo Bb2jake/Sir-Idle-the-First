@@ -337,29 +337,29 @@ var Service = (function () {
         this.controller.showPotionActiveTimes();
     };
     Service.prototype.saveData = function () {
-        var potionQtys = [];
-        var potionTimeRemaining = [];
-        this.hero.potions.forEach(function (potion) {
-            potionQtys.push(potion.quantity);
-            potionTimeRemaining.push(potion.boostTimeRemaining || 0);
-        });
-        var data = {
-            currentHp: this.hero.stats.currentHp,
-            level: this.hero.level,
-            exp: this.hero.currentExp,
-            potionQtys: potionQtys,
-            potionTimesRemaining: potionTimeRemaining,
-            zoneNum: this.zones.indexOf(this.currentZone),
-            enemyNum: this.enemies.indexOf(this.currentEnemy)
-        };
-        // if (this.saveId) {
-        $.ajax({
-            url: '//localhost:3000/save?' + this.saveId,
-            type: 'PUT',
-            success: function (res) {
-                console.log(res);
-            }
-        });
+        // let potionQtys = [];
+        // let potionTimeRemaining = [];
+        // this.hero.potions.forEach(potion => {
+        // 	potionQtys.push(potion.quantity);
+        // 	potionTimeRemaining.push(potion.boostTimeRemaining || 0);
+        // });
+        // let data = {
+        // 	currentHp: this.hero.stats.currentHp,
+        // 	level: this.hero.level,
+        // 	exp: this.hero.currentExp,
+        // 	potionQtys: potionQtys,
+        // 	potionTimesRemaining: potionTimeRemaining,
+        // 	zoneNum: this.zones.indexOf(this.currentZone),
+        // 	enemyNum: this.enemies.indexOf(this.currentEnemy)
+        // }
+        // // if (this.saveId) {
+        // $.ajax({
+        // 	url: '//localhost:3000/save?' + this.saveId,
+        // 	type: 'PUT',
+        // 	success: (res) => {
+        // 		console.log(res);
+        // 	}
+        // })
         // } else {
         // $.post('//localhost:3000/save/', data).then(res => {
         // 	if (res._id)

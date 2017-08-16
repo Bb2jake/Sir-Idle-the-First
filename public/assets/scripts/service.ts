@@ -414,32 +414,32 @@ class Service {
 	}
 
 	private saveData() {
-		let potionQtys = [];
-		let potionTimeRemaining = [];
+		// let potionQtys = [];
+		// let potionTimeRemaining = [];
 
-		this.hero.potions.forEach(potion => {
-			potionQtys.push(potion.quantity);
-			potionTimeRemaining.push(potion.boostTimeRemaining || 0);
-		});
+		// this.hero.potions.forEach(potion => {
+		// 	potionQtys.push(potion.quantity);
+		// 	potionTimeRemaining.push(potion.boostTimeRemaining || 0);
+		// });
 
-		let data = {
-			currentHp: this.hero.stats.currentHp,
-			level: this.hero.level,
-			exp: this.hero.currentExp,
-			potionQtys: potionQtys,
-			potionTimesRemaining: potionTimeRemaining,
-			zoneNum: this.zones.indexOf(this.currentZone),
-			enemyNum: this.enemies.indexOf(this.currentEnemy)
-		}
+		// let data = {
+		// 	currentHp: this.hero.stats.currentHp,
+		// 	level: this.hero.level,
+		// 	exp: this.hero.currentExp,
+		// 	potionQtys: potionQtys,
+		// 	potionTimesRemaining: potionTimeRemaining,
+		// 	zoneNum: this.zones.indexOf(this.currentZone),
+		// 	enemyNum: this.enemies.indexOf(this.currentEnemy)
+		// }
 
-		// if (this.saveId) {
-		$.ajax({
-			url: '//localhost:3000/save?' + this.saveId,
-			type: 'PUT',
-			success: (res) => {
-				console.log(res);
-			}
-		})
+		// // if (this.saveId) {
+		// $.ajax({
+		// 	url: '//localhost:3000/save?' + this.saveId,
+		// 	type: 'PUT',
+		// 	success: (res) => {
+		// 		console.log(res);
+		// 	}
+		// })
 
 		// } else {
 		// $.post('//localhost:3000/save/', data).then(res => {

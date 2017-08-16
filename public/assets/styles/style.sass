@@ -5,7 +5,8 @@ $standardBG : url("../art/standardBG.png");
 $text-black-outline: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 
 body
-    overflow: hidden;
+	overflow: hidden;
+	user-select: none;
 
 .standard-bg
     border-image: $standardBG 15 fill;
@@ -165,5 +166,3 @@ body
     #hero .defeated-overlay
         bottom: 75px;
         left: 0;
-
-// @media (max-width: 700px)
