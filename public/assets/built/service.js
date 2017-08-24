@@ -177,6 +177,10 @@ var Service = (function () {
     Service.prototype.heroAttack = function () {
         var hero = this.hero;
         var currentEnemy = this.currentEnemy;
+        if (hero.chosenAttack.stun) {
+            currentEnemy.chosenAttack.cooldownRemaining = currentEnemy.chosenAttack.cooldown;
+            this.selectEnemyAttack();
+        }
         var damage = this.randomizeDamage(hero.chosenAttack.potency * this.getHeroAtk());
         currentEnemy.stats.currentHp -= damage;
         hero.chosenAttack.cooldownRemaining = hero.chosenAttack.cooldown;

@@ -44,7 +44,6 @@ class Service {
 		this.tick();
 	}
 
-
 	public getHeroAtk(): number {
 		let hero = this.hero;
 		let potion = hero.potions[1];
@@ -224,7 +223,10 @@ class Service {
 	private heroAttack() {
 		let hero = this.hero;
 		let currentEnemy = this.currentEnemy;
-
+		if (hero.chosenAttack.stun) {
+			currentEnemy.chosenAttack.cooldownRemaining = currentEnemy.chosenAttack.cooldown;			
+			this.selectEnemyAttack();
+		}
 		var damage = this.randomizeDamage(hero.chosenAttack.potency * this.getHeroAtk());
 
 		currentEnemy.stats.currentHp -= damage;
