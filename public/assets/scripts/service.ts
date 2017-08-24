@@ -252,7 +252,7 @@ class Service {
 		let currentEnemy = this.currentEnemy;
 
 		var damage = this.randomizeDamage(currentEnemy.chosenAttack.potency * currentEnemy.stats.atk);
-		
+
 		hero.stats.currentHp -= damage;
 		currentEnemy.chosenAttack.cooldownRemaining = currentEnemy.chosenAttack.cooldown;
 
