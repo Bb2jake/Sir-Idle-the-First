@@ -309,7 +309,6 @@ var Service = (function () {
         this.hero.potions.forEach(function (potion) {
             if (potion.isActive) {
                 potion.boostTimeRemaining -= 1 / 30;
-                // TODO: Show seconds left on screen
                 if (potion.boostTimeRemaining <= 0) {
                     potion.boostTimeRemaining = 0;
                     this.deactivatePotion(potion);

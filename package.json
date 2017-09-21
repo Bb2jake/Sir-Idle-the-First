@@ -1,23 +1,24 @@
 {
-  "name": "SlapGame",
-  "version": "1.0.0",
-  "description": "> A Vue.js project",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Bb2jake/SlapGame.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Bb2jake/SlapGame/issues"
-  },
-  "homepage": "https://github.com/Bb2jake/SlapGame#readme",
-  "dependencies": {
-    "@types/jquery": "^3.2.12"
-  }
+	"name": "slapgame",
+	"version": "1.0.0",
+	"description": "> A Vue.js project",
+	"main": "index.js",
+	"scripts": {
+		"dev": "node index.html",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Bb2jake/SlapGame.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Bb2jake/SlapGame/issues"
+	},
+	"homepage": "https://github.com/Bb2jake/SlapGame#readme",
+	"dependencies": {
+		"@types/jquery": "^3.2.12"
+	}
 }

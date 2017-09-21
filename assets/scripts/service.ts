@@ -1,5 +1,5 @@
 class Service {
-	private controller;
+	private controller: Controller;
 	private saveId = 0;
 	private isPaused = true;
 	private hero: Hero;
